@@ -1,15 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { alignContent, flex, flexDirection, width } from 'styled-system';
-
+import authService from '../../services/auth.service'
 
 function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+  const onLogin = () => {
+    authService.login(email, password).then(res => {console.log(res)})
+    .catch(err => console.log(err));
+ 
+  }
     const navigation = useNavigation();
-  return (
+  return ( 
     <View style={styles.container}>
       <View style={styles.Middle}>
         <Text style={styles.LoginText}>Login</Text>
@@ -24,6 +32,7 @@ function Login() {
         
         <View style={styles.emailInput}>
           <Input
+           onChangeText={newText => setEmail(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="user-secret" />}
@@ -55,6 +64,7 @@ function Login() {
         
         <View style={styles.emailInput}>
           <Input
+           onChangeText={newText => setPassword(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="key" />}
@@ -83,109 +93,9 @@ function Login() {
 
       {/* Button */}
       <View style={styles.buttonStyle}>
-        <Button style={styles.buttonDesign}>
+        <Button style={styles.buttonDesign} onPress={() => onLogin()}>
             LOGIN
         </Button>
-      </View>
-
-      {/* Line */}
-      <View style={styles.lineStyle}>
-        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-        <View>
-          <Text style={{width: 50, textAlign: 'center'}}>Or</Text>
-        </View>
-        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-      </View>
-
-      {/* Box */}
-      <View style={styles.boxStyle}>
-      <Box 
-        onPress={() => navigation.navigate("#")}  // for navigation 
-        style={{height:80, width:80}} 
-        shadow={3}
-        _light={{
-          backgroundColor: "gray.50",
-        }}
-        _dark={{
-          backgroundColor: "gray.700",
-        }}
-      >
-        <AspectRatio ratio={1 / 1}>
-          <Image
-            roundedTop="lg"
-            source={{
-              uri: "https://www.transparentpng.com/thumb/google-logo/colorful-google-logo-transparent-clipart-download-u3DWLj.png",
-            }}
-            alt="image"
-          />
-        </AspectRatio>
-      </Box>
-      <Box 
-        onPress={() => navigation.navigate("#")}  // for navigation
-        style={styles.imageStyle}
-        shadow={3}
-        _light={{
-          backgroundColor: "gray.50",
-        }}
-        _dark={{
-          backgroundColor: "gray.700",
-        }}
-      >
-        <AspectRatio ratio={1 / 1}>
-          <Image
-            
-            roundedTop="lg"
-            source={{
-              uri: "https://www.transparentpng.com/thumb/facebook-logo-png/photo-facebook-logo-png-hd-25.png",
-            }}
-            alt="image"
-          />
-        </AspectRatio>
-      </Box>
-      <Box 
-        onPress={() => navigation.navigate("#")}  // for navigation
-        style={styles.imageStyle}
-        shadow={3}
-        _light={{
-          backgroundColor: "gray.50",
-        }}
-        _dark={{
-          backgroundColor: "gray.700",
-        }}
-      >
-        <AspectRatio ratio={1 / 1}>
-          <Image
-            
-            roundedTop="lg"
-            source={{
-              uri: "https://www.transparentpng.com/thumb/twitter/bird-twitter-socialmedia-icons-png-5.png",
-            }}
-            alt="image"
-          />
-        </AspectRatio>
-      </Box>
-      <Box 
-        onPress={() => navigation.navigate("#")}  // for navigation
-        style={styles.imageStyle}
-        shadow={3}
-        _light={{
-          backgroundColor: "gray.50",
-        }}
-        _dark={{
-          backgroundColor: "gray.700",
-        }}
-      >
-        <AspectRatio ratio={1 / 1}>
-          <Image
-            
-            roundedTop="lg"
-            source={{
-              uri: "https://www.transparentpng.com/thumb/apple-logo/RRgURB-apple-logo-clipart-hd.png",
-            }}
-            alt="image"
-          />
-        </AspectRatio>
-      </Box>
       </View>
       <StatusBar style="auto" />
     </View>
