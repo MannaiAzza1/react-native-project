@@ -18,6 +18,7 @@ export default function Challenge() {
   const [goal, setChallengeGoal] = useState("");
   const [vid_link, setChallengeVid] = useState("");
   const [period, setChallengePeriod] = useState("");
+  const [hideId, setHideId] = useState(null);
 
   useEffect(() => {
     getList();
@@ -34,6 +35,7 @@ export default function Challenge() {
   };
   const handelVisibleModal = () => {
     setVisible(!visible);
+    setHideId(null);
   };
 
   const handelDelete = (item) => {
@@ -47,34 +49,62 @@ export default function Challenge() {
   };
 
   const handelUpdate = (item) => {
-    axios({
-      url: "http://127.0.0.1:8080/api/challenge/" + item._id + "/update",
-      method: "PUT",
-    }).then((res) => {
-      var response = res.data;
-      getList();
-    });
+    setVisible(true);
+    setHideId(item._id);
+    setChallengeGoal(item.goal);
+    setChallengeVid(item.vid_link);
+    setChallengePeriod(item.period);
+
+    // axios({
+    //   url: "http://127.0.0.1:8080/api/challenge/" + item._id + "/update",
+    //   method: "PUT",
+    // }).then((res) => {
+    //   var response = res.data;
+    //   getList();
+    // });
   };
   const handelSave = () => {
-    var data = {
-      goal: goal,
-      vid_link: vid_link,
-      period: period,
-    };
-    axios({
-      url: "http://127.0.0.1:8080/api/challenge/create",
-      method: "POST",
-      data: data,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => {
-      getList();
-      setChallengeGoal("");
-      setChallengeVid("");
-      setChallengePeriod("");
-      setVisible(false);
-    });
+    if (hideId == null) {
+      var data = {
+        goal: goal,
+        vid_link: vid_link,
+        period: period,
+      };
+      axios({
+        url: "http://127.0.0.1:8080/api/challenge/create",
+        method: "POST",
+        data: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        getList();
+        setChallengeGoal("");
+        setChallengeVid("");
+        setChallengePeriod("");
+        setVisible(false);
+      });
+    } else {
+      var data = {
+        goal: goal,
+        vid_link: vid_link,
+        period: period,
+      };
+      axios({
+        url: "http://127.0.0.1:8080/api/challenge/" + hideId + "/update",
+        method: "PUT",
+        data: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        getList();
+        setChallengeGoal("");
+        setChallengeVid("");
+        setChallengePeriod("");
+        setVisible(false);
+      });
+    }
   };
 
   const onChangeGoal = (value) => {
@@ -104,6 +134,7 @@ export default function Challenge() {
               <Text style={styles.txtClose}>close</Text>
             </TouchableOpacity>
             <Text>Nouveau défi</Text>
+            <Text>{hideId}</Text>
             <Text>{goal},</Text>
             <Text>{vid_link},</Text>
             <Text>{period}.</Text>
@@ -126,7 +157,7 @@ export default function Challenge() {
               onChangeText={onChangePeriod}
             />
             <TouchableOpacity onPress={handelSave}>
-              <Text>Save new</Text>
+              <Text>{hideId == null ? "save" : "update"}</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
