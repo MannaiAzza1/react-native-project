@@ -9,7 +9,7 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-
+import ChallengeService from "../../../services/challenge.services";
 import React, { cloneElement, useEffect, useState } from "react";
 import axios from "axios";
 export default function Challenge() {
@@ -24,10 +24,7 @@ export default function Challenge() {
     getList();
   }, []);
   const getList = () => {
-    axios({
-      url: "http://127.0.0.1:8080/api/challenge/",
-      method: "GET",
-    }).then((res) => {
+    ChallengeService.getAll().then((res) => {
       var response = res.data;
       setList(response);
       console.log(response);
@@ -39,10 +36,7 @@ export default function Challenge() {
   };
 
   const handelDelete = (item) => {
-    axios({
-      url: "http://127.0.0.1:8080/api/challenge/" + item._id + "/delete",
-      method: "DELETE",
-    }).then((res) => {
+    ChallengeService.remove(item._id).then((res) => {
       var response = res.data;
       getList();
     });
@@ -54,14 +48,6 @@ export default function Challenge() {
     setChallengeGoal(item.goal);
     setChallengeVid(item.vid_link);
     setChallengePeriod(item.period);
-
-    // axios({
-    //   url: "http://127.0.0.1:8080/api/challenge/" + item._id + "/update",
-    //   method: "PUT",
-    // }).then((res) => {
-    //   var response = res.data;
-    //   getList();
-    // });
   };
   const handelSave = () => {
     if (hideId == null) {
@@ -70,14 +56,7 @@ export default function Challenge() {
         vid_link: vid_link,
         period: period,
       };
-      axios({
-        url: "http://127.0.0.1:8080/api/challenge/create",
-        method: "POST",
-        data: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => {
+      ChallengeService.create(data).then((res) => {
         getList();
         setChallengeGoal("");
         setChallengeVid("");
@@ -90,14 +69,7 @@ export default function Challenge() {
         vid_link: vid_link,
         period: period,
       };
-      axios({
-        url: "http://127.0.0.1:8080/api/challenge/" + hideId + "/update",
-        method: "PUT",
-        data: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => {
+      ChallengeService.update(hideId, data).then((res) => {
         getList();
         setChallengeGoal("");
         setChallengeVid("");
@@ -200,7 +172,6 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 15,
-    // backgroundColor : "#е3е3e3",
     marginTop: 10,
   },
   txtClose: {
@@ -267,7 +238,7 @@ const styles = StyleSheet.create({
   btnSave: {
     padding: 10,
     backgroundColor: "black",
-    marginTop:10,
+    marginTop: 10,
     marginLeft: "auto",
     marginRight: "auto",
   },

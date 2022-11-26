@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import Challenge from "./challenge/challenge";
+import Challenge from "./src/compnents/challenge/challenge";
 
 export default function App() {
   return (
