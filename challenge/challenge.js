@@ -10,7 +10,7 @@ import {
   Modal,
 } from "react-native";
 
-import React, { useEffect, useState } from "react";
+import React, { cloneElement, useEffect, useState } from "react";
 import axios from "axios";
 export default function Challenge() {
   const [list, setList] = useState([]);
@@ -119,12 +119,9 @@ export default function Challenge() {
   return (
     <SafeAreaView>
       <View style={styles.header_container}>
-        <Text>Challenge</Text>
-        <TouchableOpacity
-          style={styles.text_input}
-          onPress={handelVisibleModal}
-        >
-          <Text>New Challenge</Text>
+        <Text style={styles.challengeTitle}>Challenge {list.length}</Text>
+        <TouchableOpacity style={styles.btnNew} onPress={handelVisibleModal}>
+          <Text style={styles.txtNew}>New Challenge</Text>
         </TouchableOpacity>
       </View>
       <Modal animationType="slide" visible={visible}>
@@ -156,8 +153,10 @@ export default function Challenge() {
               placeholder="period"
               onChangeText={onChangePeriod}
             />
-            <TouchableOpacity onPress={handelSave}>
-              <Text>{hideId == null ? "save" : "update"}</Text>
+            <TouchableOpacity style={styles.btnSave} onPress={handelSave}>
+              <Text style={styles.txtSave}>
+                {hideId == null ? "save" : "update"}
+              </Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -165,20 +164,20 @@ export default function Challenge() {
       <ScrollView>
         {list.map((item, index) => {
           return (
-            <View key={index}>
+            <View style={styles.item_challenge} key={index}>
               <View>
-                <Text>
+                <Text style={styles.txt_goal}>
                   {index + 1}. {item.goal}
                 </Text>
-                <Text>{item.vid_link}</Text>
-                <Text>{item.period}</Text>
+                <Text style={styles.txt_item}>{item.vid_link}</Text>
+                <Text style={styles.txt_item}>{item.period}</Text>
               </View>
               <View>
                 <TouchableOpacity onPress={() => handelDelete(item)}>
-                  <Text>Delete</Text>
+                  <Text style={styles.txt_del}>Delete</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handelUpdate(item)}>
-                  <Text>Edit</Text>
+                  <Text style={styles.txt_edit}>Edit</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -195,7 +194,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+  challengeTitle: {
+    fontWeight: "bold",
+    fontSize: 22,
+  },
   form: {
     padding: 15,
     // backgroundColor : "#е3е3e3",
@@ -213,11 +215,65 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 10,
     marginTop: 10,
+    marginLeft: 50,
+    marginRight: 50,
   },
   header_container: {
-    padding: 15,
+    padding: 10,
     backgroundColor: "#eeeeee",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  challengeTitle: {
+    fontWeight: "bold",
+    fontSize: 22,
+  },
+  item_challenge: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderColor: "#e2e2e2",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  txt_goal: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: 5,
+  },
+  txt_item: {
+    fontSize: 16,
+    marginTop: 5,
+  },
+  txt_del: {
+    fontSize: 14,
+    marginTop: 5,
+    fontWeight: "bold",
+    color: "red",
+  },
+  txt_edit: {
+    fontSize: 14,
+    marginTop: 5,
+    fontWeight: "bold",
+    color: "blue",
+  },
+  btnNew: {
+    padding: 10,
+    backgroundColor: "black",
+    marginLeft: 10,
+  },
+  txtNew: {
+    color: "white",
+  },
+  btnSave: {
+    padding: 10,
+    backgroundColor: "black",
+    marginTop:10,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  txtSave: {
+    color: "white",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 });
