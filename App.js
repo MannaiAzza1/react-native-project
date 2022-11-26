@@ -2,11 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Challenge from "./src/compnents/challenge/challenge";
 import Program from "./src/compnents/program/program";
+import Event from "./src/compnents/event/event";
+
 export default function App() {
   return (
     <View style={styles.container}>
       <Challenge />
       <Program />
+      <Event />
       <StatusBar style="auto" />
     </View>
   );
