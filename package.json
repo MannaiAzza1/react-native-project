@@ -10,10 +10,6 @@
   },
   "dependencies": {
     "@ant-design/react-native": "^5.0.2",
-  
-    "expo-font": "~11.0.1",
-   
-    "react-native-web": "~0.18.9",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@expo/webpack-config": "^0.16.19",
     "@react-native-picker/picker": "^2.4.8",
@@ -28,6 +24,7 @@
     "axios": "^1.2.0",
     "expo": "~47.0.8",
     "expo-checkbox": "~2.2.2",
+    "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",
     "http": "^0.0.1-security",
     "native-base": "^3.4.22",
@@ -44,7 +41,16 @@
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",
     "react-native-svg": "^13.6.0",
-    "react-native-tab-view": "^3.0.0"
+    "react-native-tab-view": "^3.0.0",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-web": "~0.18.9",
+    "@expo/vector-icons": "^12.0.5",
+    "@react-native-community/masked-view": "^0.1.11",
+    "localstorage-polyfill": "^1.0.1",
+    "react-native-element-dropdown": "^2.4.0",
+    "react-native-material-dropdown": "^0.11.1",
+    "styled-components": "^5.3.0",
+    "styled-system": "^5.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

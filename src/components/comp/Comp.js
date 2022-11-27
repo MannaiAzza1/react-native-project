@@ -1,7 +1,6 @@
 import {useRef} from "react";
 import { useState, useEffect } from "react";
 import CompetenceService from "../../../services/comp-service";
-
 import { List } from 'react-native-paper';
 import Dropdown from 'react-native-input-select';
 import {Picker} from '@react-native-picker/picker';
@@ -121,9 +120,9 @@ const [title, setTitle] = useState();
             <Picker
            style={styles.text_input}
            placeholder={CurrentComp.isVisible}
-           selectedValue={selectedLanguage}
+           selectedValue={selectedVisible}
        onValueChange={(itemValue, itemIndex) =>
-    {setSelectedLanguage(itemValue) 
+    {SetSelectedVisible(itemValue) 
     console.log(itemValue)
     }
   }>
