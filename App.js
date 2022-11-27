@@ -1,25 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Challenge from "./src/compnents/challenge/challenge";
 import Program from "./src/compnents/program/program";
 import Event from "./src/compnents/event/event";
 
+import React from "react";
+// 1. import `NativeBaseProvider` component
+import Comp from "./src/components/comp/Comp";
+
+
+
 export default function App() {
+  const Drawer = createDrawerNavigator();
+  // 2. Use at the root of your app
   return (
-    <View style={styles.container}>
-      <Challenge />
-      <Program />
-      <Event />
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Competences" component={Comp} />
+        <Drawer.Screen name="Challenge" component={Challenge} />
+        <Drawer.Screen name="Program" component={Program} />
+        <Drawer.Screen name="Event" component={Event} />
+      </Drawer.Navigator>
+  
+    
+  </NavigationContainer>
+      
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
