@@ -1,44 +1,52 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { alignContent, flex, flexDirection, width } from 'styled-system';
-import authService from '../../services/auth.service';
-import { Dropdown } from 'react-native-element-dropdown';
-
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Input,
+  NativeBaseProvider,
+  Button,
+  Icon,
+  Box,
+  Image,
+  AspectRatio,
+} from "native-base";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { alignContent, flex, flexDirection, width } from "styled-system";
+import authService from "../../services/auth.service";
+import { Dropdown } from "react-native-element-dropdown";
 
 function Signup() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [birthdate, setBirthdate] = useState('');
-  const [abonnement, setAbonnement] = useState('');
-    const navigation = useNavigation();
-const abonnementOptions = [
-  { label: 'free', value: 'free' },
-  { label: 'basic', value: 'basic' },
-  { label: 'premium', value: 'premium' },
-]
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [abonnement, setAbonnement] = useState("");
+  const navigation = useNavigation();
+  const abonnementOptions = [
+    { label: "free", value: "free" },
+    { label: "basic", value: "basic" },
+    { label: "premium", value: "premium" },
+  ];
 
-const roleOptions = [
-  { label: 'coach', value: 'coach' }
-]
-    const onRegister = () => {
-      let data = {
-        username,
-        password,
-        email,
-        role,
-        birthdate,
-        abonnement,
-      };
-      authService.register(data).then(res => {console.log(res)})
-      .catch(err => console.log(err));
-   
-    }
+  const roleOptions = [{ label: "coach", value: "coach" }];
+  const onRegister = () => {
+    let data = {
+      username,
+      password,
+      email,
+      role,
+      birthdate,
+      abonnement,
+    };
+    authService
+      .register(data)
+      .then((res) => {
+        navigation.navigate("Login");
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <View style={styles.container}>
       <View style={styles.Middle}>
@@ -46,15 +54,16 @@ const roleOptions = [
       </View>
       <View style={styles.text2}>
         <Text>Already have account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")} ><Text style={styles.signupText}> Login </Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.signupText}> Login </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Username or Email Input Field */}
       <View style={styles.buttonStyle}>
-        
         <View style={styles.emailInput}>
           <Input
-           onChangeText={newText => setUsername(newText)}
+            onChangeText={(newText) => setUsername(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="user-secret" />}
@@ -76,18 +85,15 @@ const roleOptions = [
             _dark={{
               placeholderTextColor: "blueGray.50",
             }}
-
           />
         </View>
       </View>
 
-
-       {/* Password Input Field */}
-       <View style={styles.buttonStyleX}>
-        
+      {/* Password Input Field */}
+      <View style={styles.buttonStyleX}>
         <View style={styles.emailInput}>
           <Input
-           onChangeText={newText => setPassword(newText)}
+            onChangeText={(newText) => setPassword(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="key" />}
@@ -116,10 +122,9 @@ const roleOptions = [
 
       {/* Username or Email Input Field */}
       <View style={styles.buttonStyleX}>
-        
         <View style={styles.emailInput}>
           <Input
-           onChangeText={newText => setEmail(newText)}
+            onChangeText={(newText) => setEmail(newText)}
             InputLeftElement={
               <Icon
                 as={<MaterialCommunityIcons name="email" />}
@@ -141,64 +146,54 @@ const roleOptions = [
             _dark={{
               placeholderTextColor: "blueGray.50",
             }}
-
           />
         </View>
       </View>
 
-
-
       <View style={styles.buttonStyleX}>
-        
         <View style={styles.dropdown}>
-          
-        <Dropdown   
-        
-          style={[styles.dropdown && { borderColor: 'blue' }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          iconStyle={styles.iconStyle}
-          data={roleOptions}
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={true ? 'Role' : '...'}
-          value={roleOptions.value}
-          onChange={item => {
-            setRole(item.value);
-            
-          }}
-        />
+          <Dropdown
+            style={[styles.dropdown && { borderColor: "blue" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            data={roleOptions}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={true ? "Role" : "..."}
+            value={roleOptions.value}
+            onChange={(item) => {
+              setRole(item.value);
+            }}
+          />
         </View>
       </View>
 
       <View style={styles.buttonStyleX}>
-        
         <View style={styles.dropdown}>
-        <Dropdown
-          style={[styles.dropdown && { borderColor: 'blue' }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          iconStyle={styles.iconStyle}
-          data={abonnementOptions}
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={true ? 'Abonnement' : '...'}
-          value={abonnementOptions.value}
-          onChange={item => {
-            setAbonnement(item.value);
-          }}
-        />
+          <Dropdown
+            style={[styles.dropdown && { borderColor: "blue" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            data={abonnementOptions}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={true ? "Abonnement" : "..."}
+            value={abonnementOptions.value}
+            onChange={(item) => {
+              setAbonnement(item.value);
+            }}
+          />
         </View>
       </View>
-
-    
 
       {/* Button */}
       <View style={styles.buttonStyle}>
         <Button style={styles.buttonDesign} onPress={() => onRegister()}>
-            REGISTER NOW
+          REGISTER NOW
         </Button>
       </View>
       <StatusBar style="auto" />
@@ -209,86 +204,82 @@ const roleOptions = [
 export default () => {
   return (
     <NativeBaseProvider>
-     
-        <Signup />
-      
+      <Signup />
     </NativeBaseProvider>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   dropdown: {
     margin: 16,
     height: 50,
-    borderBottomColor: 'gray',
+    borderBottomColor: "gray",
     borderBottomWidth: 0.5,
   },
-  iconStyle:{
-    marginTop:30,
-    marginLeft:15
-
+  iconStyle: {
+    marginTop: 30,
+    marginLeft: 15,
   },
-  
+
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   LoginText: {
-    marginTop:100,
-    fontSize:30,
-    fontWeight:'bold',
+    marginTop: 100,
+    fontSize: 30,
+    fontWeight: "bold",
   },
-  Middle:{
-    alignItems:'center',
-    justifyContent:'center',
+  Middle: {
+    alignItems: "center",
+    justifyContent: "center",
   },
-  text2:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:5
+  text2: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingTop: 5,
   },
-  signupText:{
-    fontWeight:'bold'
+  signupText: {
+    fontWeight: "bold",
   },
-  emailField:{
-    marginTop:30,
-    marginLeft:15
+  emailField: {
+    marginTop: 30,
+    marginLeft: 15,
   },
-  emailInput:{
-    marginTop:10,
-    marginRight:5
+  emailInput: {
+    marginTop: 10,
+    marginRight: 5,
   },
-  buttonStyle:{
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15
+  buttonStyle: {
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
   },
-  buttonStyleX:{
-    marginTop:12,
-    marginLeft:15,
-    marginRight:15
+  buttonStyleX: {
+    marginTop: 12,
+    marginLeft: 15,
+    marginRight: 15,
   },
-  buttonDesign:{
-    backgroundColor:'#026efd'
+  buttonDesign: {
+    backgroundColor: "#026efd",
   },
-  lineStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    alignItems:'center'
+  lineStyle: {
+    flexDirection: "row",
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    alignItems: "center",
   },
-  imageStyle:{
-    width:80,
-    height:80,
-    marginLeft:20,
+  imageStyle: {
+    width: 80,
+    height: 80,
+    marginLeft: 20,
   },
-  boxStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    justifyContent:'space-around'
+  boxStyle: {
+    flexDirection: "row",
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    justifyContent: "space-around",
   },
 });
