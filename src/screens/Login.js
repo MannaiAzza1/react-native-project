@@ -6,17 +6,22 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { alignContent, flex, flexDirection, width } from 'styled-system';
 import authService from '../../services/auth.service'
+import Place from './Place';
+
 
 function Login() {
+   const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
   const onLogin = () => {
-    authService.login(email, password).then(res => {console.log(res)})
+    authService.login(email, password).then(res => {
+      navigation.navigate("Place")
+    })
     .catch(err => console.log(err));
  
   }
-    const navigation = useNavigation();
+ 
   return ( 
     <View style={styles.container}>
       <View style={styles.Middle}>
