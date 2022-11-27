@@ -1,43 +1,53 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { alignContent, flex, flexDirection, width } from 'styled-system';
-import authService from '../../services/auth.service'
-import Place from './Place';
-
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Input,
+  NativeBaseProvider,
+  Button,
+  Icon,
+  Box,
+  Image,
+  AspectRatio,
+} from "native-base";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { alignContent, flex, flexDirection, width } from "styled-system";
+import authService from "../../services/auth.service";
+import Place from "./Place";
+import HomePage from "./homePage";
 
 function Login() {
-   const navigation = useNavigation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const onLogin = () => {
-    authService.login(email, password).then(res => {
-      navigation.navigate("Place")
-    })
-    .catch(err => console.log(err));
- 
-  }
- 
-  return ( 
+    authService
+      .login(email, password)
+      .then((res) => {
+        navigation.navigate("HomePage");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  return (
     <View style={styles.container}>
       <View style={styles.Middle}>
         <Text style={styles.LoginText}>Login</Text>
       </View>
       <View style={styles.text2}>
         <Text>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")} ><Text style={styles.signupText}> Sign up</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+          <Text style={styles.signupText}> Sign up</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Username or Email Input Field */}
       <View style={styles.buttonStyle}>
-        
         <View style={styles.emailInput}>
           <Input
-           onChangeText={newText => setEmail(newText)}
+            onChangeText={(newText) => setEmail(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="user-secret" />}
@@ -59,17 +69,15 @@ function Login() {
             _dark={{
               placeholderTextColor: "blueGray.50",
             }}
-
           />
         </View>
       </View>
 
       {/* Password Input Field */}
       <View style={styles.buttonStyleX}>
-        
         <View style={styles.emailInput}>
           <Input
-           onChangeText={newText => setPassword(newText)}
+            onChangeText={(newText) => setPassword(newText)}
             InputLeftElement={
               <Icon
                 as={<FontAwesome5 name="key" />}
@@ -99,7 +107,7 @@ function Login() {
       {/* Button */}
       <View style={styles.buttonStyle}>
         <Button style={styles.buttonDesign} onPress={() => onLogin()}>
-            LOGIN
+          LOGIN
         </Button>
       </View>
       <StatusBar style="auto" />
@@ -110,74 +118,71 @@ function Login() {
 export default () => {
   return (
     <NativeBaseProvider>
-     
-        <Login />
-      
+      <Login />
     </NativeBaseProvider>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   LoginText: {
-    marginTop:100,
-    fontSize:30,
-    fontWeight:'bold',
+    marginTop: 100,
+    fontSize: 30,
+    fontWeight: "bold",
   },
-  Middle:{
-    alignItems:'center',
-    justifyContent:'center',
+  Middle: {
+    alignItems: "center",
+    justifyContent: "center",
   },
-  text2:{
-    flexDirection:'row',
-    justifyContent:'center',
-    paddingTop:5
+  text2: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingTop: 5,
   },
-  signupText:{
-    fontWeight:'bold'
+  signupText: {
+    fontWeight: "bold",
   },
-  emailField:{
-    marginTop:30,
-    marginLeft:15
+  emailField: {
+    marginTop: 30,
+    marginLeft: 15,
   },
-  emailInput:{
-    marginTop:10,
-    marginRight:5
+  emailInput: {
+    marginTop: 10,
+    marginRight: 5,
   },
-  buttonStyle:{
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15
+  buttonStyle: {
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
   },
-  buttonStyleX:{
-    marginTop:12,
-    marginLeft:15,
-    marginRight:15
+  buttonStyleX: {
+    marginTop: 12,
+    marginLeft: 15,
+    marginRight: 15,
   },
-  buttonDesign:{
-    backgroundColor:'#026efd'
+  buttonDesign: {
+    backgroundColor: "#026efd",
   },
-  lineStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    alignItems:'center'
+  lineStyle: {
+    flexDirection: "row",
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    alignItems: "center",
   },
-  imageStyle:{
-    width:80,
-    height:80,
-    marginLeft:20,
+  imageStyle: {
+    width: 80,
+    height: 80,
+    marginLeft: 20,
   },
-  boxStyle:{
-    flexDirection:'row',
-    marginTop:30,
-    marginLeft:15,
-    marginRight:15,
-    justifyContent:'space-around'
+  boxStyle: {
+    flexDirection: "row",
+    marginTop: 30,
+    marginLeft: 15,
+    marginRight: 15,
+    justifyContent: "space-around",
   },
 });

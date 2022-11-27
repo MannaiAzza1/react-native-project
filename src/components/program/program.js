@@ -9,7 +9,7 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import ProgramService from "../../services/program.services";
+import ProgramService from "../../../services/program.services";
 import React, { cloneElement, useEffect, useState } from "react";
 export default function Program() {
   const [list, setList] = useState([]);
