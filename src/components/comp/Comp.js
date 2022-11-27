@@ -33,7 +33,14 @@ const Comp = () => {
 };
 
 const [CurrentComp,setCurrentComp]=useState(initialComp);
-const [selectedLanguage, setSelectedLanguage] = useState(CurrentComp.isVisible);
+const [selectedVisible, setSelectedVisible] = useState();
+const [type, setType] = useState();
+const [link, setLink] = useState();
+const [desc, setDesc] = useState();
+const [nbstars, setNbstars] = useState();
+const [title, setTitle] = useState();
+
+
   useEffect(() => {
     
     
@@ -103,6 +110,10 @@ const [selectedLanguage, setSelectedLanguage] = useState(CurrentComp.isVisible);
               value={CurrentComp.link}
               style={styles.text_input}
               placeholder="Lien Competence"
+              onChange={(itemValue, itemIndex) =>
+                {
+                console.log(itemValue)
+                }}
               
         
               
