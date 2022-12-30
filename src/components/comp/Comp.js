@@ -1,7 +1,6 @@
 import {useRef} from "react";
 import { useState, useEffect } from "react";
 import CompetenceService from "../../../services/comp-service";
-
 import { List } from 'react-native-paper';
 import Dropdown from 'react-native-input-select';
 import {Picker} from '@react-native-picker/picker';
@@ -199,7 +198,6 @@ const handelDelete = (item) => {
         
               
             />
-
             <Picker
            style={styles.text_input}
            placeholder={CurrentComp.isVisible}

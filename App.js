@@ -1,30 +1,29 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Challenge from "./src/components/challenge/challenge";
+import Program from "./src/components/program/program";
+import Event from "./src/components/event/event";
+import Login from "./src/screens/Login";
+import Signup from "./src/screens/Signup";
+import Place from "./src/screens/Place";
+import HomePage from "./src/screens/homePage";
+
 import React from "react";
 // 1. import `NativeBaseProvider` component
 import Comp from "./src/components/comp/Comp";
-import Stat from './src/components/stat/stat';
-import InvitePlayer from './src/components/player/invitePlayer';
-
-
-
 
 export default function App() {
-  const Drawer = createDrawerNavigator();
+  const Stack = createStackNavigator();
   // 2. Use at the root of your app
   return (
     <NavigationContainer>
-      
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Competences" component={Comp} />
-        <Drawer.Screen name="Statistiques" component={Stat} />
-        <Drawer.Screen name="Inviter joueur" component={InvitePlayer} />
-        
-      </Drawer.Navigator>
-  
-    
-  </NavigationContainer>
-      
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="HomePage" component={HomePage} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
