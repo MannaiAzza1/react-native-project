@@ -2,7 +2,7 @@ import http from "../http-common";
 import  Axios  from "axios";
 
 const getAll = async () => {
-  const result = await Axios.get("http://172.16.13.197:8080/api/stat")
+  const result = await Axios.get("http://192.168.1.35:8080/api/stat")
   return result.data
 };
 

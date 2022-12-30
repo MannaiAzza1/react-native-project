@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-const API_URL = "http://172.16.13.197:8080/api/auth/";
+const API_URL = "http://192.168.1.35:8080/api/auth/";
 
 const register = (data) => {
-    return axios.post("http://172.16.13.197:8080/api/auth/signup/coach", data);
+    return axios.post("http://192.168.1.35:8080/api/auth/signup/coach", data);
 };
 const invite = (id, username, email, password, firstname, lastname) => {
     return axios.post(API_URL + id + "/invite", {
@@ -15,10 +15,10 @@ const invite = (id, username, email, password, firstname, lastname) => {
     });
 };
 const getinvites = (id) => {
-    return axios.get(`http://172.16.13.197:8080/api/player/coach/` + id);
+    return axios.get(`http://192.168.1.35:8080/api/player/coach/` + id);
 };
 const acceptInvite = (id, data) => {
-    return axios.put(`http://172.16.13.197:8080/api/auth/confirm/${id}`, data);
+    return axios.put(`http://192.168.1.35:8080/api/auth/confirm/${id}`, data);
   };
 
 const login = (username, password) => {
