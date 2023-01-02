@@ -6,7 +6,7 @@ const getAll = ()  => {
 };
 const fetchPlaces = async () => {
     // await delay(500)
-    const result = await Axios.get("http://192.168.1.7/api/place");
+    const result = await Axios.get("http://192.168.1.6:8080/api/place");
     return result.data;
 
 }
@@ -14,7 +14,7 @@ const get = (id) => {
     return http.get(`/place/${id}`);
 };
 const create = (data) => {
-    return http.post("/place/create", data);
+    return Axios.post("http://192.168.1.6:8080/api/place/create", data);
 };
 const update = (id, data) => {
     return http.put(`/place/${id}/update`, data);

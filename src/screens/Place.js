@@ -9,9 +9,9 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import placeService from '../../services/place.service'
-import React, { cloneElement, useEffect, useState } from "react";
 import PlaceService from "../../services/place.service";
+import React, { cloneElement, useEffect, useState } from "react";
+
 export default function Place() {
   const [list, setList] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -25,7 +25,7 @@ export default function Place() {
     getList();
   }, []);
   const getList = () => {
-    placeService.getAll().then((res) => {
+    PlaceService.getAll().then((res) => {
       var response = res.data;
       setList(response);
       console.log(response);
@@ -37,7 +37,7 @@ export default function Place() {
   };
 
   const handelDelete = (item) => {
-    placeService.remove(item._id).then((res) => {
+    PlaceService.remove(item._id).then((res) => {
       var response = res.data;
       getList();
     });

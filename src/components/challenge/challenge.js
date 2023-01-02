@@ -1,4 +1,6 @@
 import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "@react-navigation/native";
+
 import {
   StyleSheet,
   Text,
@@ -19,6 +21,7 @@ export default function Challenge() {
   const [vid_link, setChallengeVid] = useState("");
   const [period, setChallengePeriod] = useState("");
   const [hideId, setHideId] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     getList();
@@ -27,7 +30,6 @@ export default function Challenge() {
     ChallengeService.getAll().then((res) => {
       var response = res.data;
       setList(response);
-      console.log(response);
     });
   };
   const handelVisibleModal = () => {
@@ -41,6 +43,15 @@ export default function Challenge() {
       getList();
     });
   };
+
+  const handelAssign = (item) => {
+    ChallengeService.assign(item._id,item.data).then((res) => {
+      var response = res.data;
+      getList();
+    });
+  };
+
+
 
   const handelUpdate = (item) => {
     setVisible(true);
@@ -150,6 +161,9 @@ export default function Challenge() {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handelUpdate(item)}>
                   <Text style={styles.txt_edit}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity  label="Assign" onPress={() => navigation.navigate("ChallengeAssign", { challengeId: item._id })} >
+                  <Text style={styles.txt_del}>Assign</Text>
                 </TouchableOpacity>
               </View>
             </View>
