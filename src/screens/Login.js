@@ -12,8 +12,10 @@ import {
 } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { alignContent, flex, flexDirection, width } from "styled-system";
+import { alignContent, flex, flexDirection, system, width } from "styled-system";
 import authService from "../../services/auth.service";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import Place from "./Place";
 import HomePage from "./homePage";
 
@@ -26,7 +28,21 @@ function Login() {
     authService
       .login(email, password)
       .then((res) => {
-        navigation.navigate("HomePage");
+        
+        
+        
+       
+        AsyncStorage.setItem('userId',res.id)
+        
+        if(res.role.toLowerCase()=="coach")
+        {navigation.navigate("HomePage");}
+        else
+         if((res.role.toLowerCase()=="player"))
+        {
+          AsyncStorage.setItem('code',res.confirmationCode)
+          navigation.navigate("Confirm")
+        }
+        
       })
       .catch((err) => console.log(err));
   };

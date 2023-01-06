@@ -10,9 +10,12 @@ import Signup from "./src/screens/Signup";
 import Place from "./src/screens/Place";
 import HomePage from "./src/screens/homePage";
 
+
 import React from "react";
 // 1. import `NativeBaseProvider` component
 import Comp from "./src/components/comp/Comp";
+import VerifyCode from "./src/screens/PlayerVerify";
+import UpdatePlayer from "./src/components/player/updatePlayer";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -23,6 +26,17 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="Confirm" component={VerifyCode} />
+        <Stack.Screen name="UpdatePlayer" component={UpdatePlayer} options={{
+          title: 'My home',
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

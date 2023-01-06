@@ -1,14 +1,15 @@
 import {useRef} from "react";
 import { useState, useEffect } from "react";
 import CompetenceService from "../../../services/comp-service";
-
 import { List } from 'react-native-paper';
 import Dropdown from 'react-native-input-select';
 import {Picker} from '@react-native-picker/picker';
 import NumericInput from 'react-native-numeric-input'
 
+
 import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
 import StatService from "../../../services/stat-service";
+import { async } from "q";
 
 
 
@@ -72,6 +73,7 @@ const fetchData = async () => {
     
     
     
+    
     fetchData();
 }, []); 
 const handleSave = async() => {
@@ -132,9 +134,10 @@ const onChangeTitle = (value) => {
   setTitle(value);
   console.log(value)
 };
-const onChangeScale= (value) => {
+const onChangeScale= async (value) => {
   setScale(value);
   console.log(value)
+  
 };
 const onChangeUnit = (value) => {
     setUnit(value);
@@ -149,6 +152,7 @@ const onChangeDesc = (value) => {
   };
 const handleEdit = (item) =>
 {
+  
   setCurrentId(item._id)
   setVisible(true)
   setLink(item.link)
@@ -163,6 +167,7 @@ const handleEdit = (item) =>
 
 }
 const handelDelete = (item) => {
+ 
   StatService.remove(item._id).then((res) => {
     fetchData();
   });

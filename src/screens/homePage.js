@@ -29,6 +29,8 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import InvitePlayer from "../components/player/invitePlayer";
+import Stat from "../components/stat/stat";
 
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
@@ -50,6 +52,8 @@ export default function HomePage() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Competences" component={Comp} />
+      <Drawer.Screen name="Statistiques" component={Stat} />
+      <Drawer.Screen name="Inviter joueur" component={InvitePlayer} />
       <Drawer.Screen name="Challenge" component={Challenge} />
       <Drawer.Screen name="Program" component={Program} />
       <Drawer.Screen name="Event" component={Event} />

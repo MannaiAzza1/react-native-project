@@ -10,12 +10,12 @@ const get = id => {
 export const FetchCompetences = async () => {
   
   // await delay(500)
-  const result = await Axios.get("http://192.168.1.35:8080/api/comp/")
+  const result = await Axios.get("http://192.168.1.5:8080/api/comp/")
   return result.data
 }
 export const FetchVisibleCompetences = async () => {
   // await delay(500)
-  const result = await Axios.get("http://192.168.1.35:8080/api/comp/visible")
+  const result = await Axios.get("http://192.168.1.5:8080/api/comp/visible")
   return result.data
 }
 const create = data => {
@@ -35,7 +35,7 @@ const FindVisible = () => {
   };
   export const CreateCompetences = async (data) => {
     // await delay(500)
-    const result = await Axios.post("http://192.168.1.35:8080/api/comp/create",data)
+    const result = await Axios.post("http://192.168.1.5:8080/api/comp/create",data)
     return result.data
   }
 

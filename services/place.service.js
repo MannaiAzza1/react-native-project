@@ -6,7 +6,7 @@ const getAll = ()  => {
 };
 const fetchPlaces = async () => {
     // await delay(500)
-    const result = await Axios.get("http://192.168.1.7/api/place");
+    const result = await Axios.get("http://192.168.1.5/api/place");
     return result.data;
 
 }

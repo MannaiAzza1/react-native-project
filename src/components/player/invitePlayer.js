@@ -11,7 +11,7 @@ import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Aler
 import StatService from "../../../services/stat-service";
 import AuthService from "../../../services/auth-service";
 import { set } from "react-native-reanimated";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -57,7 +57,8 @@ const handleVisibleModal = () => {
   
 };
 const fetchData = async () => {
-  const comps = await AuthService.getinvites("637ffc6f3da5e8663fcf1639")
+  user = await AsyncStorage.getItem('userId')   
+  const comps = await AuthService.getinvites(user)
   if (comps) {
       console.log(comps.data)
       setComp(comps.data)
@@ -72,6 +73,7 @@ const fetchData = async () => {
     fetchData();
 }, []); 
 const handleSave = async() => {
+   user = await AsyncStorage.getItem('userId')  
    var data = {
     firstname: firstname,
     email: email,
@@ -81,9 +83,10 @@ const handleSave = async() => {
     lastname:lastname,
    
     };
+    console.log(user)
     console.log(data)
     if(currentId==null)
-    { AuthService.invite("637ffc6f3da5e8663fcf1639",username,email,pasword,firstname,lastname).then((res) => {
+    { AuthService.invite(user,username,email,pasword,firstname,lastname).then((res) => {
       Alert.alert("Player has been successfully invited!")
       fetchData();
       setUsername("");
