@@ -21,8 +21,9 @@ import Program from "../components/program/program";
 import Event from "../components/event/event";
 import Comp from "../components/comp/Comp";
 import ChallengeAssign from "../components/challenge/challengeAssign";
+import AddSession from "../components/session/addSession";
 import Place from "./Place";
-import Session from "./Session"
+import Session from "./Session";
 import React from "react";
 import AuthService from "../../services/auth.service";
 
@@ -57,16 +58,29 @@ export default function HomePage() {
       <Drawer.Screen name="Event" component={Event} />
       <Drawer.Screen name="Place" component={Place} />
       <Drawer.Screen name="Session" component={Session} />
-      <Drawer.Screen  options={{
-    drawerItemStyle: { height: 0 }
-  }} name="ChallengeAssign" component={ChallengeAssign} style={styles.hidden} label/>
-
+      <Drawer.Screen
+        options={{
+          drawerItemStyle: { height: 0 },
+        }}
+        name="ChallengeAssign"
+        component={ChallengeAssign}
+        style={styles.hidden}
+        label
+      />
+      <Drawer.Screen
+        options={{
+          drawerItemStyle: { height: 0 },
+        }}
+        name="AddSession"
+        component={AddSession}
+        style={styles.hidden}
+        label
+      />
     </Drawer.Navigator>
   );
-  
 }
 const styles = StyleSheet.create({
   hidden: {
     display: "none",
-  }
-  })
+  },
+});

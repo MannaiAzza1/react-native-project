@@ -1,21 +1,21 @@
 import axios from "axios";
 const create = (data) => {
-  return axios.post("http://192.168.1.6:8080/event/add", data);
+  return axios.post("http://192.168.1.7:8080/event/add", data);
 };
 
 const getAll = () => {
-  return axios.get("http://192.168.1.6:8080/event/get");
+  return axios.get("http://192.168.1.7:8080/event/get");
 };
 
 const getEvent = (id) => {
-  return axios.get("http://192.168.1.6:8080/event/get/" + id);
+  return axios.get("http://192.168.1.7:8080/event/get/" + id);
 };
 
 const updateEvent = (id, data) => {
-  return axios.put("http://192.168.1.6:8080/event/update/" + id, data);
+  return axios.put("http://192.168.1.7:8080/event/update/" + id, data);
 };
 const remove = (id) => {
-  return axios.delete("http://192.168.1.6:8080/event/delete/" + id);
+  return axios.delete("http://192.168.1.7:8080/event/delete/" + id);
 };
 
 const EventService = {

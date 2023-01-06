@@ -1,8 +1,7 @@
-
 import { StatusBar } from "expo-status-bar";
 import { useLocation } from "@react-navigation/native";
-import MultiSelect from 'react-native-multiple-select';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import MultiSelect from "react-native-multiple-select";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   StyleSheet,
@@ -20,120 +19,115 @@ import axios from "axios";
 import AuthService from "../../../services/auth.service";
 import PlayerService from "../../../services/player.service";
 export default function ChallengeAssign({ route, navigation }) {
-    const [user, setUser] = useState([]);
-    const [invitedUsers, setInvitedUsers] = useState([]);
-    const [item, setItems] = useState([]);
-    const [period, setPeriod] = useState("");
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
+  const [user, setUser] = useState([]);
+  const [invitedUsers, setInvitedUsers] = useState([]);
+  const [item, setItems] = useState([]);
+  const [period, setPeriod] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
-    let players = [];
-    const  challengeId  = route.params.challengeId;
+  let players = [];
+  const challengeId = route.params.challengeId;
 
-    useEffect(() => {
-      AuthService.getData().then(r => {let u = (JSON.parse(r))
-           u.invited_users.forEach(element => {
-         invitedUsers.push(element)
-     });
-     if(invitedUsers)
-    { invitedUsers.forEach(e => { 
-         PlayerService.fetchPlayer(e).then(res => {
-          item.push({id: res._id,name: res.username })
-         })
-     });
-   }
-    
-   });
-    }, [] );
-    const onSelectedItemsChange = (selectedItems) => {
-        setSelectedItems(selectedItems);
-     
-        for (let i = 0; i < selectedItems.length; i++) {
-          var tempItem = item.find(item => item.id === selectedItems[i]);
-        }
-     
-      };
-     
-   
-    // const playerOptionsl = AuthService.getinvites(coach._id, coach).then(res => console.log(res));
-    
-   
-     
+  useEffect(() => {
+    AuthService.getData().then((r) => {
+      let u = JSON.parse(r);
+      u.invited_users.forEach((element) => {
+        invitedUsers.push(element);
+      });
+      if (invitedUsers) {
+        invitedUsers.forEach((e) => {
+          PlayerService.fetchPlayer(e).then((res) => {
+            item.push({ id: res._id, name: res.username });
+          });
+        });
+      }
+    });
+  }, []);
+  const onSelectedItemsChange = (selectedItems) => {
+    setSelectedItems(selectedItems);
+
+    for (let i = 0; i < selectedItems.length; i++) {
+      var tempItem = item.find((item) => item.id === selectedItems[i]);
+    }
+  };
+
+  // const playerOptionsl = AuthService.getinvites(coach._id, coach).then(res => console.log(res));
 
   const onSubmit = () => {
     let data = {
       period,
       players: selectedItems,
-    }
-      ChallengeService.update(challengeId, data).then(res => setModalVisible(true))
+    };
+    ChallengeService.update(challengeId, data).then((res) =>
+      setModalVisible(true)
+    );
   };
   return (
     <SafeAreaView>
-  <View style={styles.buttonStyleX}>
-<View style={styles.dropdown}>
-<MultiSelect
-          hideSubmitButton
-          ref={(component) => { this.multiSelect = component }}
-          items={item}
-          uniqueKey="id"
-          onSelectedItemsChange={onSelectedItemsChange}
-          selectedItems={selectedItems}
-          selectText="Select Items"
-          searchInputPlaceholderText="Search Items Here..."
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="name"
-          hideTags = {true}
-          searchInputStyle={{ color: '#CCC' }}
-        
-        />
- 
- <View>
-          {
-          this.multiSelect?.getSelectedItemsExt(selectedItems)
-          }
-        </View>
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>success</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-</View>
-<View style={styles.buttonStyle}>
-        <View style={styles.text_input}>
-        <Text> Period:</Text>
-      <TextInput style={styles.input} onChangeText={(e) => setPeriod(e)}/>
-        </View>
-        <Button
-style={{fontSize: 20, color: 'green'}}
-styleDisabled={{color: 'red'}}
-onPress={() => onSubmit()}
-title="SUBMIT"
->
-    </Button>
-      </View>
+      <View style={styles.buttonStyleX}>
+        <View style={styles.dropdown}>
+          <MultiSelect
+            hideSubmitButton
+            ref={(component) => {
+              this.multiSelect = component;
+            }}
+            items={item}
+            uniqueKey="id"
+            onSelectedItemsChange={onSelectedItemsChange}
+            selectedItems={selectedItems}
+            selectText="Select Items"
+            searchInputPlaceholderText="Search Items Here..."
+            tagRemoveIconColor="#CCC"
+            tagBorderColor="#CCC"
+            tagTextColor="#CCC"
+            selectedItemTextColor="#CCC"
+            selectedItemIconColor="#CCC"
+            itemTextColor="#000"
+            displayKey="name"
+            hideTags={true}
+            searchInputStyle={{ color: "#CCC" }}
+          />
 
-</View>
+          <View>{this.multiSelect?.getSelectedItemsExt(selectedItems)}</View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>success</Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        </View>
+        <View style={styles.buttonStyle}>
+          <View style={styles.text_input}>
+            <Text> Period:</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(e) => setPeriod(e)}
+            />
+          </View>
+          <Button
+            style={{ fontSize: 20, color: "green" }}
+            styleDisabled={{ color: "red" }}
+            onPress={() => onSubmit()}
+            title="SUBMIT"
+          ></Button>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -234,7 +228,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -245,16 +239,16 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -265,17 +259,10 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 });
-
-
-
-
-
-
-

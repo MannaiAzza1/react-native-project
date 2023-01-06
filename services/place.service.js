@@ -1,38 +1,36 @@
 import http from "../http-common";
 import Axios from "axios";
-const getAll = ()  => {
-    return http.get("/place");
-    
+const getAll = () => {
+  return http.get("/place");
 };
 const fetchPlaces = async () => {
-    // await delay(500)
-    const result = await Axios.get("http://192.168.1.6:8080/api/place");
-    return result.data;
-
-}
+  // await delay(500)
+  const result = await Axios.get("http://192.168.1.7:8080/api/place");
+  return result.data;
+};
 const get = (id) => {
-    return http.get(`/place/${id}`);
+  return http.get(`/place/${id}`);
 };
 const create = (data) => {
-    return Axios.post("http://192.168.1.6:8080/api/place/create", data);
+  return Axios.post("http://192.168.1.7:8080/api/place/create", data);
 };
 const update = (id, data) => {
-    return http.put(`/place/${id}/update`, data);
+  return http.put(`/place/${id}/update`, data);
 };
 const remove = (id) => {
-    return http.delete(`/place/${id}/delete`);
+  return http.delete(`/place/${id}/delete`);
 };
 const removeAll = () => {
-    return http.delete(`/place`);
+  return http.delete(`/place`);
 };
 
 const PlaceService = {
-    getAll,
-    get,
-    create,
-    update,
-    remove,
-    removeAll,
-    fetchPlaces,
+  getAll,
+  get,
+  create,
+  update,
+  remove,
+  removeAll,
+  fetchPlaces,
 };
 export default PlaceService;

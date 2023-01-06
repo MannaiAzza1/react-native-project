@@ -9,19 +9,25 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from "react-native-simple-radio-button";
+import { useNavigation } from "@react-navigation/native";
 import SessionService from "../../services/session.service";
 import React, { cloneElement, useEffect, useState } from "react";
 import { margin } from "styled-system";
 
-export default function Place() {
+export default function Session() {
+  const navigation = useNavigation();
   const [list, setList] = useState([]);
   const [visible, setVisible] = useState(false);
   const [cancelModal, setCancelModal] = useState(false);
   const [feedbackModal, setFeedbackModal] = useState(false);
   const [name, setSessionName] = useState("");
   const [date, setDate] = useState("");
-  const [place, setPlace] = useState("");
+  const [place, setPlace] = useState([]);
   const [player, setPlayer] = useState("");
   const [status, setStatus] = useState("");
   const [canceledReason, setCanceledReason] = useState("");
@@ -29,8 +35,8 @@ export default function Place() {
   const [obj, setObj] = useState(false);
   const [hideId, setHideId] = useState(null);
   var radio_props = [
-    {label: 'yes', value: true },
-    {label: 'no', value: false }
+    { label: "yes", value: true },
+    { label: "no", value: false },
   ];
   useEffect(() => {
     getList();
@@ -40,17 +46,18 @@ export default function Place() {
       var response = res.data;
       setList(response?.data);
     });
+    console.log(list);
   };
-  const  handelVisibleModal = () => {
-      setVisible(!visible); 
-          setHideId(null);
+  const handelVisibleModal = () => {
+    setVisible(!visible);
+    setHideId(null);
   };
-  const  handelVisibleModalCanceled = () => {
-    setCancelModal(!cancelModal); 
-};
-const  handelVisibleModalFeedback = () => {
-  setFeedbackModal(!feedbackModal); 
-};
+  const handelVisibleModalCanceled = () => {
+    setCancelModal(!cancelModal);
+  };
+  const handelVisibleModalFeedback = () => {
+    setFeedbackModal(!feedbackModal);
+  };
 
   const handelDelete = (item) => {
     SessionService.remove(item._id).then((res) => {
@@ -67,8 +74,6 @@ const  handelVisibleModalFeedback = () => {
     setPlace(item.place);
     setPlayer(item.player);
     setStatus(item.status);
-
-    
   };
 
   const handelCanceled = (item) => {
@@ -79,23 +84,26 @@ const  handelVisibleModalFeedback = () => {
     setPlace(item.place);
     setPlayer(item.player);
     setStatus(item.status);
-
-    
   };
   const handelSubmitCanceled = () => {
-    SessionService.updateCancel(hideId, {canceled_reason: canceledReason, status: "canceled"}).then(res => {handelVisibleModalCanceled();
-    getList() })
-  }
+    SessionService.updateCancel(hideId, {
+      canceled_reason: canceledReason,
+      status: "canceled",
+    }).then((res) => {
+      handelVisibleModalCanceled();
+      getList();
+    });
+  };
 
   const handleSubmitFeedback = () => {
-    SessionService.updateFeedback(hideId, 
-      {feedback, 
-      obj_Is_Achieved: obj
-      }).then(res => {
-        handelVisibleModalFeedback();
-        getList();
-      })
-  }
+    SessionService.updateFeedback(hideId, {
+      feedback,
+      obj_Is_Achieved: obj,
+    }).then((res) => {
+      handelVisibleModalFeedback();
+      getList();
+    });
+  };
 
   const handelFeedback = (item) => {
     setFeedbackModal(true);
@@ -105,48 +113,6 @@ const  handelVisibleModalFeedback = () => {
     setPlace(item.place);
     setPlayer(item.player);
     setStatus(item.status);
-
-    
-  };
-  const handelSave = () => {
-    if (hideId == null) {
-      var data = {
-        name: name,
-        date: date,
-        place: place,
-        status: status,
-        player: player,
-       
-      };
-      SessionService.create(data).then((res) => {
-        getList();
-        setSessionName("");
-        setPlace("");
-        setDate("");
-        setVisible(false);
-        setStatus("");
-        setPlayer("");
-        
-      });
-    } else {
-      var data = {
-        name: name,
-        place: place,
-        date: date,
-        status: status,
-        player: player,
-       
-      };
-      SessionService.update(hideId, data).then((res) => {
-        getList();
-        setSessionName("");
-        setPlace("");
-        setDate("");
-        setVisible(false);
-        setStatus("");
-        setPlayer("");
-      });
-    }
   };
 
   const onChangeName = (value) => {
@@ -155,7 +121,7 @@ const  handelVisibleModalFeedback = () => {
   const onChangePlace = (value) => {
     setPlace(value);
   };
- 
+
   const onChangeDate = (value) => {
     setDate(value);
   };
@@ -184,80 +150,32 @@ const  handelVisibleModalFeedback = () => {
     <SafeAreaView>
       <View style={styles.header_container}>
         <Text style={styles.sessionTitle}>Session {list.length}</Text>
-        <TouchableOpacity style={styles.btnNew} onPress={handelVisibleModal}>
+        <TouchableOpacity
+          style={styles.btnNew}
+          onPress={() => navigation.navigate("AddSession")}
+        >
           <Text style={styles.txtNew}>New Session</Text>
         </TouchableOpacity>
       </View>
-      <Modal animationType="slide" visible={visible}>
-        <SafeAreaView>
-          <View>
-            <TouchableOpacity onPress={handelVisibleModal}>
-              <Text style={styles.txtClose}>close</Text>
-            </TouchableOpacity>                                       
-        
-            <Text>New session</Text>
-            <Text>{hideId}</Text>
-            <Text>{name},</Text>
-            <Text>{place},</Text>
-            <Text>{date}.</Text>
-            <Text>{status},</Text>
-            <Text>{player}.</Text>
-            <TextInput
-              value={name}
-              style={styles.text_input}
-              placeholder="Name"
-              onChangeText={onChangeName}
-            />
-            <TextInput
-              value={place}
-              style={styles.text_input}
-              placeholder="place"
-              onChangeText={onChangePlace}
-            />
-            <TextInput
-              value={date}
-              style={styles.text_input}
-              placeholder="date"
-              onChangeText={onChangeDate}
-            />
-             <TextInput
-              value={status}
-              style={styles.text_input}
-              placeholder="status"
-              onChangeText={onChangeStatus}
-            />
-           
-             <TextInput
-              value={player}
-              style={styles.text_input}
-              placeholder="Address"
-              onChangeText={onChangePlayer}
-            />
-            <TouchableOpacity style={styles.btnSave} onPress={handelSave}>
-              <Text style={styles.txtSave}>
-                {hideId == null ? "save" : "update"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </Modal>
+
       <Modal animationType="slide" visible={cancelModal}>
         <SafeAreaView>
           <View>
             <TouchableOpacity onPress={handelVisibleModalCanceled}>
               <Text style={styles.txtClose}>close</Text>
-            </TouchableOpacity>                                       
+            </TouchableOpacity>
             <TextInput
               value={canceledReason}
               style={styles.text_input}
               placeholder="canceledReason"
               onChangeText={onChangeCanceledReason}
             />
-        
-            <TouchableOpacity style={styles.btnSave} onPress={handelSubmitCanceled}>
-              <Text style={styles.txtSave}>
-              update
-              </Text>
+
+            <TouchableOpacity
+              style={styles.btnSave}
+              onPress={handelSubmitCanceled}
+            >
+              <Text style={styles.txtSave}>update</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -267,31 +185,32 @@ const  handelVisibleModalFeedback = () => {
           <View style={styles.centered}>
             <TouchableOpacity onPress={handelVisibleModalFeedback}>
               <Text style={styles.txtClose}>close</Text>
-            </TouchableOpacity>                                       
+            </TouchableOpacity>
             <TextInput
               value={feedback}
               style={styles.text_input}
               placeholder="feedback"
               onChangeText={onChangeFeedback}
-            
             />
             <Text>Objective is set:</Text>
-         <RadioForm
-          radio_props={radio_props}
-          formHorizontal={true}
-          labelHorizontal={true}
-          initial={null}
-          borderWidth={1}
-          style={{ margin: 'auto'}}
-          buttonInnerColor={'#e74c3c'}
-          buttonWrapStyle={{ marginLeft: "auto",
-          marginRight: "auto",}}
-          onPress={(value) => {setObj(value)}}
-        />
-            <TouchableOpacity style={styles.btnSave} onPress={handleSubmitFeedback}>
-              <Text style={styles.txtSave}>
-              submit
-              </Text>
+            <RadioForm
+              radio_props={radio_props}
+              formHorizontal={true}
+              labelHorizontal={true}
+              initial={null}
+              borderWidth={1}
+              style={{ margin: "auto" }}
+              buttonInnerColor={"#e74c3c"}
+              buttonWrapStyle={{ marginLeft: "auto", marginRight: "auto" }}
+              onPress={(value) => {
+                setObj(value);
+              }}
+            />
+            <TouchableOpacity
+              style={styles.btnSave}
+              onPress={handleSubmitFeedback}
+            >
+              <Text style={styles.txtSave}>submit</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -306,7 +225,7 @@ const  handelVisibleModalFeedback = () => {
                 </Text>
                 <Text style={styles.txt_item}>{item?.name}</Text>
                 <Text style={styles.txt_item}>{item?.date}</Text>
-                <Text style={styles.txt_item}>{item?.place}</Text>
+                {/* <Text style={styles.txt_item}>{item?.place.name}</Text> */}
                 <Text style={styles.txt_item}>{item?.player}</Text>
                 <Text style={styles.txt_item}>{item?.status}</Text>
               </View>
@@ -405,7 +324,7 @@ const styles = StyleSheet.create({
   },
   txtNew: {
     color: "white",
-    padding:10
+    padding: 10,
   },
   btnSave: {
     padding: 10,
@@ -419,9 +338,9 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
   },
-  centered:{
+  centered: {
     textAlign: "center",
     marginLeft: "auto",
     marginRight: "auto",
-  }
+  },
 });
