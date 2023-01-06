@@ -32,6 +32,7 @@ const VerifyCode = () => {
 
 
 
+
 const handleSave = async() => {
     const id = await AsyncStorage.getItem('userId')
     const code = await AsyncStorage.getItem('code')
@@ -41,7 +42,7 @@ const handleSave = async() => {
         status:"Accepted"
       };
       const result = await axios.put(`http://192.168.1.5:8080/api/player/${id}/update`,data)
-      navigation.navigate("UpdatePlayer");
+      navigation.navigate("UpdatePlayer",{data: id,});
     }
     else
     {

@@ -23,15 +23,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import PlayerService from "../../../services/player-service";
+import { id } from "deprecated-react-native-prop-types/DeprecatedTextPropTypes";
 
 
 
-
-const Separator = () => (
-  <View style={styles.separator} />
-);
-
-const UpdatePlayer = () => {
+const UpdatePlayer = ({route}) => {
+  const navigation = useNavigation();
   
   const drawer = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
@@ -98,10 +95,15 @@ const [sexe, setSexe] = useState();
 const [date, setDate] = useState(new Date())
 const [poids, setPoids] = useState();
 const [stats,setStats]=useState([]);
+const { data } = route.params;
+const id =data
 
 const fetchData = async () => {
+  const test =await AsyncStorage.getItem("role")
+  setRole(test)
+  console.log(role) 
   const user = await AsyncStorage.getItem('userId')   
-  const player = await axios.get(`http://192.168.1.5:8080/api/player/${user}`)
+  const player = await axios.get(`http://192.168.1.5:8080/api/player/${data}`)
   const competence = await CompetenceService.FetchCompetences();
   const statistiques = await StatService.getAll();
   setComp(competence)
@@ -111,11 +113,12 @@ const fetchData = async () => {
  
 };
   useEffect(() => {
+    
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
    
     fetchData();
-    console.log(CurrentPlayer)
+   
     
 }, []); 
 
@@ -131,16 +134,20 @@ const handleSave = async() => {
     lastname:lastname,
     birthdate:date.toString(),
     poids:poids,
-    competences:selectedItems
+    sexe:sexe,
+    competences:selectedItems,
+    stats:selectedStats,
    
     };
    
-    console.log(selectedStats)
     console.log(data)
-    PlayerService.update(user,data)
+    PlayerService.update(id,data)
           .then(response => {
-          
-            createTwoButtonAlert()
+            if(role.toLowerCase()=="coach")
+            {navigation.navigate("Inviter joueur")}
+            
+            else
+            {createTwoButtonAlert()}
             
           });
 
@@ -172,17 +179,14 @@ const onChangeEmail = (value) => {
 }
 const handleEdit = (item) =>
 {
-
   setUsername(item.username)
   setEmail(item.email)
   setFirstname(item.firstname)
   setLastname(item.lastname)
-  setRole(item.role)
+  setPoids(item.poids)
+  setSexe(item.sexe)
   setSelectedItems(item.competences)
   setSelectedStats(item.stats)
-  
-  
-
 
 }
 
@@ -231,13 +235,15 @@ const handleEdit = (item) =>
             style={styles.text_input}
             placeholder="Username"
             onChangeText={onChangeUsername} />
-          <Text style={styles.label}>Password : </Text>
-          <TextInput
-            secureTextEntry={true}
-            value={password}
-            style={styles.text_input}
-            placeholder="Password"
-            onChangeText={onChangePassword} />
+          
+          {role=="player" && ( 
+          <><Text style={styles.label}>Password : </Text><TextInput
+              secureTextEntry={true}
+              value={password}
+              style={styles.text_input}
+              placeholder="Password"
+              onChangeText={onChangePassword} /></>
+          )}
             <Text style={styles.label}>Sexe : </Text>
           <Picker
             style={styles.text_input}
@@ -250,7 +256,7 @@ const handleEdit = (item) =>
             <Picker.Item label="Femme" value="femme" />
             <Picker.Item label="Homme" value="homme" />
           </Picker>
-          <Text style={styles.label}>Birthdate : </Text>
+          <Text style={styles.label}>Birthdate: {date.toDateString()} </Text>
           <TouchableOpacity style={styles.btnSave}>
           <Button title="Choose Date"
               onPress={() => showDatePicker()}></Button>
@@ -274,50 +280,49 @@ const handleEdit = (item) =>
 
 
 onChange={value => setPoids(value)} />
- <Text style={styles.label}>Competences : </Text>
- <SafeAreaView style={{flex: 1}}>
-<MultiSelect
-          hideTags
-          items={comp}
-          uniqueKey="_id"
-          onSelectedItemsChange={onSelectedItemsChange}
-          selectedItems={selectedItems}
-          selectText="Select Items"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="title"
-          submitButtonColor="#00BFA5"
-          submitButtonText="Submit"
-          styleDropdownMenu={styles.select}
-          
-        />
-        </SafeAreaView>
-        <Text style={styles.label}>Competences : </Text>
- <SafeAreaView style={{flex: 1}}>
-<MultiSelect
-          hideTags
-          items={stats}
-          uniqueKey="_id"
-          onSelectedItemsChange={onSelectedStatsChange}
-          selectedItems={selectedStats}
-          selectText="Select Items"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="title"
-          submitButtonColor="#00BFA5"
-          submitButtonText="Submit"
-          styleDropdownMenu={styles.select}
-          
-        />
-        </SafeAreaView>
+ {role=="Coach" && (
+ <><Text style={styles.label}>Competences : </Text><SafeAreaView style={{ flex: 1 }}>
+
+              <MultiSelect
+                hideTags
+                items={comp}
+                uniqueKey="_id"
+                onSelectedItemsChange={onSelectedItemsChange}
+                selectedItems={selectedItems}
+                selectText="Select Items"
+                tagRemoveIconColor="#CCC"
+                tagBorderColor="#CCC"
+                tagTextColor="#CCC"
+                selectedItemTextColor="#CCC"
+                selectedItemIconColor="#CCC"
+                itemTextColor="#000"
+                displayKey="title"
+                submitButtonColor="#00BFA5"
+                submitButtonText="Submit"
+                styleDropdownMenu={styles.select} />
+            </SafeAreaView></>
+ )}
+        {role=="Coach" && (
+        <><Text style={styles.label}>Competences : </Text><SafeAreaView style={{ flex: 1 }}>
+              <MultiSelect
+                hideTags
+                items={stats}
+                uniqueKey="_id"
+                onSelectedItemsChange={onSelectedStatsChange}
+                selectedItems={selectedStats}
+                selectText="Select Items"
+                tagRemoveIconColor="#CCC"
+                tagBorderColor="#CCC"
+                tagTextColor="#CCC"
+                selectedItemTextColor="#CCC"
+                selectedItemIconColor="#CCC"
+                itemTextColor="#000"
+                displayKey="title"
+                submitButtonColor="#00BFA5"
+                submitButtonText="Submit"
+                styleDropdownMenu={styles.select} />
+            </SafeAreaView></>
+        )}
 
           <TouchableOpacity style={styles.btnSave}>
             <Button

@@ -33,6 +33,7 @@ function Login() {
         
        
         AsyncStorage.setItem('userId',res.id)
+        AsyncStorage.setItem('role',res.role)
         
         if(res.role.toLowerCase()=="coach")
         {navigation.navigate("HomePage");}

@@ -5,6 +5,7 @@ import CompetenceService from "../../../services/comp-service";
 import { List } from 'react-native-paper';
 import Dropdown from 'react-native-input-select';
 import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from "@react-navigation/native";
 import NumericInput from 'react-native-numeric-input'
 
 import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
@@ -43,6 +44,7 @@ const [email, setEmail] = useState(CurrentPlayer.desc);
 const [pasword, setPasword] = useState(CurrentPlayer.pasword);
 const [firstname, setFirstname] = useState();
 const [lastname, setLastname] = useState();
+const navigation = useNavigation();
 const handleVisibleModal = () => {
   setVisible(!visible);
   setCurrentId(null)
@@ -143,15 +145,7 @@ const onChangeEmail = (value) => {
 }
 const handleEdit = (item) =>
 {
-  setCurrentId(item._id)
-  setVisible(true)
-  setUsername(item.username)
-  setSelectedVisible(item.isVisible)
-  setPasword(item.pasword)
-  setEmail(item.email)
-  setFirstname(item.firstname)
-
-  setLastname(item.lastname)
+ 
   
 
 
@@ -220,7 +214,7 @@ const handelDelete = (item) => {
           
             <TouchableOpacity style={styles.btnSave} >
             <Button
-        title={currentId == null ? "Invite" : "Update"}
+        title="Invite" 
         onPress={() => handleSave()}
       />
             </TouchableOpacity>
@@ -238,7 +232,7 @@ const handelDelete = (item) => {
             title= {item.username}
             
             
-            right={props=><Text><Button title="Edit" onPress={() => handleEdit(item)}>
+            right={props=><Text><Button title="Edit" onPress={() => navigation.navigate("UpdatePlayer",{data: item._id,})}>
               
           </Button>  </Text>}
           />
