@@ -13,7 +13,7 @@ const get = (id) => {
   return http.get(`/place/${id}`);
 };
 const create = (data) => {
-  return Axios.post("http://192.168.1.7:8080/api/place/create", data);
+  return Axios.post("http://192.168.1.5:8080/api/place/create", data);
 };
 const update = (id, data) => {
   return http.put(`/place/${id}/update`, data);

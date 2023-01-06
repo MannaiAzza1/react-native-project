@@ -9,7 +9,7 @@ import NumericInput from 'react-native-numeric-input'
 
 import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
 import StatService from "../../../services/stat-service";
-import { async } from "q";
+
 
 
 

@@ -10,6 +10,7 @@ import {
   Modal,
   Platform,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from "@react-native-picker/picker";
 
 import { Dropdown } from "react-native-element-dropdown";

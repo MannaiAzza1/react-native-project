@@ -19,11 +19,11 @@ const FindVisible = () => {
   return http.get(`/player/visible`);
 };
 export const fetchPlayer = async (id) => {
-  const result = await Axios.get(`http://192.168.1.7:8080/api/player/${id}`);
+  const result = await Axios.get(`http://192.168.1.5:8080/api/player/${id}`);
   return result.data;
 };
 export const fetchPlayers = async () => {
-  const result = await Axios.get(`http://192.168.1.7:8080/api/player/`);
+  const result = await Axios.get(`http://192.168.1.5:8080/api/player/`);
   return result.data;
 };
 
