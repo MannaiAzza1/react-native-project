@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import CompetenceService from "../../../services/comp-service";
 import { useNavigation } from "@react-navigation/native";
 import DatePicker from 'react-native-date-picker'
+import SelectMultiple from 'react-native-select-multiple'
+import MultiSelect from 'react-native-multiple-select';
 
 import { Appbar } from 'react-native-paper';
 import { List } from 'react-native-paper';
@@ -10,6 +12,7 @@ import Dropdown from 'react-native-input-select';
 import {Picker} from '@react-native-picker/picker';
 import NumericInput from 'react-native-numeric-input'
 import bcrypt from 'bcryptjs'
+import { LogBox } from 'react-native';
 
 
 import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
@@ -33,14 +36,40 @@ const UpdatePlayer = () => {
   const drawer = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
   const [comp, setComp] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const[ visible,setVisible] = useState(false)
   const [currentId,setCurrentId]=useState(null)
   const [open, setOpen] = useState(false)
+  const [role, setRole] = useState();
+  const [selectedStats, setSelectedStats] = useState([]);
+  const onSelectedStatsChange = (selectedStats) => {
+ 
+    setSelectedStats(selectedStats);
+ 
+  }
 
+ 
+ 
+  const onSelectedItemsChange = (selectedItems) => {
+ 
+    setSelectedItems(selectedItems);
+ 
+  }
 
   const [datePicker, setDatePicker] = useState(false);
  
-  
+  const createTwoButtonAlert = () =>
+  Alert.alert(
+    "You are successfuly Resgitsered",
+    "welcome to SportTech",
+    [
+      {
+        text: "Continue to App",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      }
+    ]
+  )
  
 
 
@@ -67,21 +96,29 @@ const [firstname, setFirstname] = useState();
 const [lastname, setLastname] = useState();
 const [sexe, setSexe] = useState();
 const [date, setDate] = useState(new Date())
-const [poids, setPoids] = useState()
+const [poids, setPoids] = useState();
+const [stats,setStats]=useState([]);
 
 const fetchData = async () => {
   const user = await AsyncStorage.getItem('userId')   
   const player = await axios.get(`http://192.168.1.5:8080/api/player/${user}`)
+  const competence = await CompetenceService.FetchCompetences();
+  const statistiques = await StatService.getAll();
+  setComp(competence)
+  setStats(statistiques)
+
   handleEdit(player.data)
  
 };
   useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
    
     fetchData();
     console.log(CurrentPlayer)
     
 }, []); 
+
 const handleSave = async() => {
   const user = await AsyncStorage.getItem('userId') 
  
@@ -93,15 +130,17 @@ const handleSave = async() => {
     username: username,
     lastname:lastname,
     birthdate:date.toString(),
-    poids:poids
+    poids:poids,
+    competences:selectedItems
    
     };
-
+   
+    console.log(selectedStats)
     console.log(data)
     PlayerService.update(user,data)
           .then(response => {
           
-            console.log("sucess");
+            createTwoButtonAlert()
             
           });
 
@@ -138,6 +177,10 @@ const handleEdit = (item) =>
   setEmail(item.email)
   setFirstname(item.firstname)
   setLastname(item.lastname)
+  setRole(item.role)
+  setSelectedItems(item.competences)
+  setSelectedStats(item.stats)
+  
   
 
 
@@ -231,6 +274,51 @@ const handleEdit = (item) =>
 
 
 onChange={value => setPoids(value)} />
+ <Text style={styles.label}>Competences : </Text>
+ <SafeAreaView style={{flex: 1}}>
+<MultiSelect
+          hideTags
+          items={comp}
+          uniqueKey="_id"
+          onSelectedItemsChange={onSelectedItemsChange}
+          selectedItems={selectedItems}
+          selectText="Select Items"
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="title"
+          submitButtonColor="#00BFA5"
+          submitButtonText="Submit"
+          styleDropdownMenu={styles.select}
+          
+        />
+        </SafeAreaView>
+        <Text style={styles.label}>Competences : </Text>
+ <SafeAreaView style={{flex: 1}}>
+<MultiSelect
+          hideTags
+          items={stats}
+          uniqueKey="_id"
+          onSelectedItemsChange={onSelectedStatsChange}
+          selectedItems={selectedStats}
+          selectText="Select Items"
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="title"
+          submitButtonColor="#00BFA5"
+          submitButtonText="Submit"
+          styleDropdownMenu={styles.select}
+          
+        />
+        </SafeAreaView>
+
           <TouchableOpacity style={styles.btnSave}>
             <Button
               title="Update"
@@ -388,6 +476,15 @@ const styles = StyleSheet.create({
     
     
   },
+  select: {
+    
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: 50,
+    marginRight: 50,
+    
+    
+  },
   datePicker: {
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -395,6 +492,7 @@ const styles = StyleSheet.create({
     height: 260,
     display: 'flex',
   },
+  
 });
 
 export default UpdatePlayer;
