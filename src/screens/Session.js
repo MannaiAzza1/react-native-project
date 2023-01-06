@@ -226,7 +226,7 @@ export default function Session() {
                 <Text style={styles.txt_item}>{item?.name}</Text>
                 <Text style={styles.txt_item}>{item?.date}</Text>
                 {/* <Text style={styles.txt_item}>{item?.place.name}</Text> */}
-                <Text style={styles.txt_item}>{item?.player}</Text>
+                {/* <Text style={styles.txt_item}>{item?.player}</Text> */}
                 <Text style={styles.txt_item}>{item?.status}</Text>
               </View>
               <View>

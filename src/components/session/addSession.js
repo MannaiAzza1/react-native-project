@@ -30,6 +30,7 @@ import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
 import PlayerService from "../../../services/player.service";
 import ProgramService from "../../../services/program.services";
 import AuthService from "../../../services/auth.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddSession({ route, navigation }) {
   const [name, setName] = useState("");
@@ -43,7 +44,6 @@ export default function AddSession({ route, navigation }) {
   const [programSelected, setProgramSelected] = useState(null);
   const [session, setSession] = useState(null);
   const [invitedUsers, setInvitedUsers] = useState([]);
-  const [comp, setComp] = useState([]);
 
   useEffect(() => {
     PlaceService.getAll().then((response) => {
@@ -59,30 +59,14 @@ export default function AddSession({ route, navigation }) {
 
   const fetchData = async () => {
     user = await AsyncStorage.getItem("userId");
-    const comps = await AuthService.getinvites(user);
-    if (comps) {
-      console.log(comps.data);
-      setComp(comps.data);
+    const players = await AuthService.getinvites(user);
+    if (players) {
+      console.log(players.data);
+      setPlayer(players.data);
     }
   };
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    AuthService.getData().then((r) => {
-      let u = JSON.parse(r);
-      u.invited_users.forEach((element) => {
-        invitedUsers.push(element);
-      });
-      if (invitedUsers) {
-        invitedUsers.forEach((e) => {
-          PlayerService.fetchPlayer(e).then((res) => {
-            player.push({ id: res._id, name: res.username });
-          });
-        });
-      }
-    });
   }, []);
 
   function showDatePicker() {

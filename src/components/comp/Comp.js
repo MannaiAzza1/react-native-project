@@ -19,6 +19,8 @@ import {
   Modal,
   Button,
 } from "react-native";
+import axios from "axios";
+import { set } from "react-native-reanimated";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -27,36 +29,111 @@ const Comp = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [comp, setComp] = useState([]);
   const [visible, setVisible] = useState(false);
-  const handleVisibleModal = () => {
-    setVisible(!visible);
-  };
+  const [edit, setEdit] = useState(false);
+  const [currentId, setCurrentId] = useState(null);
+
   const initialComp = {
     id: null,
     title: "",
     desc: "",
-    type: "",
+
     nb_stars: 0,
     link: "",
     isVisible: false,
   };
 
   const [CurrentComp, setCurrentComp] = useState(initialComp);
-  const [selectedVisible, setSelectedVisible] = useState();
-  const [type, setType] = useState();
-  const [link, setLink] = useState();
-  const [desc, setDesc] = useState();
-  const [nbstars, setNbstars] = useState();
-  const [title, setTitle] = useState();
+  const [selectedVisible, setSelectedVisible] = useState(CurrentComp.isVisible);
 
+  const [link, setLink] = useState(CurrentComp.link);
+  const [desc, setDesc] = useState(CurrentComp.desc);
+  const [nbstars, setNbstars] = useState(CurrentComp.nb_stars);
+  const [title, setTitle] = useState();
+  const handleVisibleModal = () => {
+    setVisible(!visible);
+    setCurrentId(null);
+    setLink("");
+    setTitle("");
+    setNbstars("");
+    setDesc("");
+    setSelectedVisible(false);
+    setCurrentId(null);
+  };
+  const fetchData = async () => {
+    const comps = await CompetenceService.FetchCompetences();
+    if (comps) {
+      setComp(comps);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const comps = await CompetenceService.FetchCompetences();
-      if (comps) {
-        setComp(comps);
-      }
-    };
     fetchData();
   }, []);
+  const handleSave = async () => {
+    var data = {
+      title: title,
+      desc: desc,
+      nb_stars: nbstars,
+      link: link,
+      isVisible: selectedVisible,
+    };
+    console.log(data);
+    if (currentId == null) {
+      CompetenceService.create(data).then((res) => {
+        Alert.alert("Added Successfuly!");
+        fetchData();
+        setLink("");
+        setTitle("");
+        setNbstars("");
+        setDesc("");
+        setSelectedVisible(false);
+        setVisible(false);
+      });
+    } else {
+      CompetenceService.update(currentId, data).then((res) => {
+        Alert.alert("Updated Sucessfully");
+        fetchData();
+        setCurrentId(null);
+        setLink("");
+        setTitle("");
+        setNbstars("");
+        setDesc("");
+        setSelectedVisible(false);
+        setCurrentId(null);
+        setVisible(false);
+      });
+    }
+  };
+
+  const onChangeLink = (value) => {
+    setLink(value);
+    console.log(value);
+  };
+  const onChangeTitle = (value) => {
+    setTitle(value);
+    console.log(value);
+  };
+  const onChangeNbStars = (value) => {
+    setNbstars(value);
+    console.log(value);
+  };
+  const onChangeDesc = (value) => {
+    setDesc(value);
+    console.log(value);
+  };
+  const handleEdit = (item) => {
+    setCurrentId(item._id);
+    setVisible(true);
+    setLink(item.link);
+    setSelectedVisible(item.isVisible);
+    setNbstars(item.nb_stars);
+    setDesc(item.desc);
+    setTitle(item.title);
+  };
+  const handelDelete = (item) => {
+    CompetenceService.remove(item._id).then((res) => {
+      fetchData();
+    });
+  };
 
   return (
     <SafeAreaView backgroundColor="white">
@@ -69,35 +146,31 @@ const Comp = () => {
               <Text style={styles.txtClose}>Close</Text>
             </TouchableOpacity>
             <TextInput
-              value={CurrentComp.title}
+              value={title}
               style={styles.text_input}
-              placeholder="Title "
+              placeholder="Title"
+              onChangeText={onChangeTitle}
             />
             <TextInput
-              value={CurrentComp.desc}
+              value={desc}
               style={styles.desc_input}
               placeholder="Description"
+              onChangeText={onChangeDesc}
             />
+            <TextInput></TextInput>
 
             <TextInput
-              value={CurrentComp.type}
-              style={styles.text_input}
-              placeholder="Type competence"
-            />
-            <TextInput
-              value={CurrentComp.link}
+              value={link}
               style={styles.text_input}
               placeholder="Lien Competence"
-              onChange={(itemValue, itemIndex) => {
-                console.log(itemValue);
-              }}
+              onChangeText={onChangeLink}
             />
             <Picker
               style={styles.text_input}
               placeholder={CurrentComp.isVisible}
               selectedValue={selectedVisible}
               onValueChange={(itemValue, itemIndex) => {
-                SetSelectedVisible(itemValue);
+                setSelectedVisible(itemValue);
                 console.log(itemValue);
               }}
             >
@@ -105,15 +178,18 @@ const Comp = () => {
               <Picker.Item label="Not Visible" value={false} />
             </Picker>
             <NumericInput
-              value={CurrentComp.nb_stars}
+              value={nbstars}
               totalWidth={90}
               totalHeight={50}
               containerStyle={styles.text_input}
-              onChange={(value) => console.log(value)}
+              onChange={(value) => setNbstars(value)}
             />
 
             <TouchableOpacity style={styles.btnSave}>
-              <Button title="Add" onPress={() => handleVisibleModal()} />
+              <Button
+                title={currentId == null ? "Add" : "Update"}
+                onPress={() => handleSave()}
+              />
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -126,8 +202,19 @@ const Comp = () => {
               style={styles.card_input}
               title={item.title}
               description={item.desc}
-              //   right={props=><Button icon="delete" onPress={() => console.log(item._id)}>
-              // </Button> }
+              right={(props) => (
+                <Text>
+                  <Button
+                    title="Edit"
+                    onPress={() => handleEdit(item)}
+                  ></Button>{" "}
+                  <Button
+                    title="Delete"
+                    color="#FA5A37"
+                    onPress={() => handelDelete(item)}
+                  ></Button>{" "}
+                </Text>
+              )}
             />
           );
         })}
