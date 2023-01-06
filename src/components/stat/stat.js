@@ -1,19 +1,24 @@
-import { useRef } from "react";
+import {useRef} from "react";
 import { useState, useEffect } from "react";
 import CompetenceService from "../../../services/comp-service";
-import { List } from "react-native-paper";
-import Dropdown from "react-native-input-select";
-import { Picker } from "@react-native-picker/picker";
-import NumericInput from "react-native-numeric-input";
+import { List } from 'react-native-paper';
+import Dropdown from 'react-native-input-select';
+import {Picker} from '@react-native-picker/picker';
+import NumericInput from 'react-native-numeric-input'
+
 
 import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
-import axios from "axios";
-import { set } from "react-native-reanimated";
+import StatService from "../../../services/stat-service";
+import { async } from "q";
 
 
-const Separator = () => <View style={styles.separator} />;
 
-const Comp = () => {
+
+const Separator = () => (
+  <View style={styles.separator} />
+);
+
+const Stat = () => {
   const drawer = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
   const [comp, setComp] = useState([]);
@@ -21,29 +26,31 @@ const Comp = () => {
   const[edit,setEdit] =useState(false)
   const [currentId,setCurrentId]=useState(null)
 
-  const initialComp = {
+  const intialStat = {
     id: null,
     title: "",
     desc: "",
- 
-    nb_stars: 0,
+    type: "",
+    unit: "",
     link: "",
+    scale:"",
     isVisible: false,
 };
 
-const [CurrentComp,setCurrentComp]=useState(initialComp);
-const [selectedVisible, setSelectedVisible] = useState(CurrentComp.isVisible);
-
-const [link, setLink] = useState(CurrentComp.link);
-const [desc, setDesc] = useState(CurrentComp.desc);
-const [nbstars, setNbstars] = useState(CurrentComp.nb_stars);
+const [CurrentStat,setCurrentStat]=useState(intialStat);
+const [selectedVisible, setSelectedVisible] = useState(CurrentStat.isVisible);
+const [link, setLink] = useState(CurrentStat.link);
+const [desc, setDesc] = useState(CurrentStat.desc);
+const [scale, setScale] = useState(CurrentStat.scale);
 const [title, setTitle] = useState();
+const [unit, setUnit] = useState();
+const [type, setType] = useState();
 const handleVisibleModal = () => {
   setVisible(!visible);
   setCurrentId(null)
   setLink("");
   setTitle("");
-  setNbstars("");
+  setScale("");
   setDesc("")
   setSelectedVisible(false)
   setCurrentId(null)
@@ -53,7 +60,7 @@ const handleVisibleModal = () => {
 };
 const fetchData = async () => {
        
-  const comps = await CompetenceService.FetchCompetences();
+  const comps = await StatService.getAll()
   if (comps) {
       setComp(comps);
   }   
@@ -66,24 +73,29 @@ const fetchData = async () => {
     
     
     
+    
     fetchData();
 }, []); 
 const handleSave = async() => {
    var data = {
     title: title,
     desc: desc,
-    nb_stars: nbstars,
+    scale: scale,
     link: link,
     isVisible: selectedVisible,
+    unit:unit,
+    type:type
     };
     console.log(data)
     if(currentId==null)
-    { CompetenceService.create(data).then((res) => {
+    { StatService.create(data).then((res) => {
       Alert.alert("Added Successfuly!")
       fetchData();
       setLink("");
       setTitle("");
-      setNbstars("");
+      setScale("");
+      setType("")
+      setUnit("")
       setDesc("")
       setSelectedVisible(false)
       setVisible(false);
@@ -92,14 +104,16 @@ const handleSave = async() => {
   else
    {
     
-      CompetenceService.update(currentId, data).then((res) => {
+      StatService.update(currentId, data).then((res) => {
         Alert.alert("Updated Sucessfully")
         fetchData();
         setCurrentId(null)
   setLink("");
   setTitle("");
-  setNbstars("");
-  setDesc("")
+  setScale("");
+  setDesc("");
+  setType("")
+  setUnit("")
   setSelectedVisible(false)
   setCurrentId(null)
         setVisible(false);
@@ -120,29 +134,41 @@ const onChangeTitle = (value) => {
   setTitle(value);
   console.log(value)
 };
-const onChangeNbStars = (value) => {
-  setNbstars(value);
+const onChangeScale= async (value) => {
+  setScale(value);
   console.log(value)
+  
 };
+const onChangeUnit = (value) => {
+    setUnit(value);
+    console.log(value)
+  };
 const onChangeDesc = (value) => {
   setDesc(value);
   console.log(value)
-};
+};const onChangeType = (value) => {
+    setType(value);
+    console.log(value)
+  };
 const handleEdit = (item) =>
 {
+  
   setCurrentId(item._id)
   setVisible(true)
   setLink(item.link)
   setSelectedVisible(item.isVisible)
-  setNbstars(item.nb_stars)
+  setScale(item.scale)
   setDesc(item.desc)
   setTitle(item.title)
+  setType(item.type)
+  setUnit(item.unit)
   
 
 
 }
 const handelDelete = (item) => {
-  CompetenceService.remove(item._id).then((res) => {
+ 
+  StatService.remove(item._id).then((res) => {
     fetchData();
   });
 };
@@ -154,10 +180,15 @@ const handelDelete = (item) => {
 
 
   return (
-    <SafeAreaView backgroundColor="white">
-      <Button title="Add new competence" onPress={() => handleVisibleModal()} />
-      <Separator />
-      <Modal animationType="slide" visible={visible}>
+  
+    
+  <SafeAreaView backgroundColor="white">
+    <Button
+        title="Add new Statistiques"
+        onPress={() => handleVisibleModal()}
+      />
+         <Separator />
+  <Modal animationType="slide" visible={visible}>
         <SafeAreaView>
           <View>
             <TouchableOpacity onPress={handleVisibleModal}>
@@ -179,7 +210,11 @@ const handelDelete = (item) => {
              
               
             />
-            <TextInput></TextInput>
+            <TextInput 
+              value={unit}
+              style={styles.text_input}
+              placeholder="Unite Statistiques"
+              onChangeText={onChangeUnit}></TextInput>
            
              <TextInput
               value={link}
@@ -190,9 +225,22 @@ const handelDelete = (item) => {
         
               
             />
+            <TextInput 
+              value={type}
+              style={styles.text_input}
+              placeholder="Type Statistiques"
+              onChangeText={onChangeType}></TextInput>
+              <TextInput 
+              value={scale}
+              style={styles.text_input}
+              placeholder="scale Statistiques"
+              keyboardType="numeric"
+              onChangeText={onChangeScale}></TextInput>
+           
+
             <Picker
            style={styles.text_input}
-           placeholder={CurrentComp.isVisible}
+           placeholder={CurrentStat.isVisible}
            selectedValue={selectedVisible}
        onValueChange={(itemValue, itemIndex) =>
     {setSelectedVisible(itemValue) 
@@ -202,14 +250,7 @@ const handelDelete = (item) => {
   <Picker.Item label="Visible" value={true} />
   <Picker.Item label="Not Visible" value={false} />
 </Picker>
-<NumericInput 
-value={nbstars} 
-totalWidth={90} 
-totalHeight={50}
-containerStyle={styles.text_input}
 
-
-onChange={value => setNbstars(value)} />
           
             <TouchableOpacity style={styles.btnSave} >
             <Button
@@ -220,8 +261,9 @@ onChange={value => setNbstars(value)} />
           </View>
         </SafeAreaView>
       </Modal>
+                     
 
-      <ScrollView backgroundColor="white">
+    <ScrollView backgroundColor="white">
         {comp.map((item, index) => {
           return (
             <List.Item
@@ -229,6 +271,7 @@ onChange={value => setNbstars(value)} />
           
             title= {item.title}
             description={item.desc}
+            
             right={props=><Text><Button title="Edit" onPress={() => handleEdit(item)}>
               
           </Button> <Button title="Delete"  color ="#FA5A37" onPress={() => handelDelete(item)}>
@@ -238,9 +281,12 @@ onChange={value => setNbstars(value)} />
           );
         })}
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView> 
+     
+      
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -261,9 +307,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginVertical: 20,
-    marginRight: 10,
+    marginRight:10,
     textAlign: "right",
-    color: "blue",
+    color:"blue"
+    
   },
   text_input: {
     padding: 10,
@@ -273,6 +320,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 50,
     marginRight: 50,
+    
+    
   },
   desc_input: {
     padding: 20,
@@ -282,6 +331,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 50,
     marginRight: 50,
+    
+    
   },
   card_input: {
     padding: 23,
@@ -291,6 +342,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 20,
     marginRight: 10,
+    
+    
   },
   header_container: {
     padding: 10,
@@ -354,9 +407,9 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginVertical: 8,
-    borderBottomColor: "#737373",
+    borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 
-export default Comp;
+export default Stat;

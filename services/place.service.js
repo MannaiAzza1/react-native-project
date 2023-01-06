@@ -4,10 +4,11 @@ const getAll = () => {
   return http.get("/place");
 };
 const fetchPlaces = async () => {
-  // await delay(500)
-  const result = await Axios.get("http://192.168.1.7:8080/api/place");
-  return result.data;
-};
+    // await delay(500)
+    const result = await Axios.get("http://192.168.1.5/api/place");
+    return result.data;
+
+}
 const get = (id) => {
   return http.get(`/place/${id}`);
 };
