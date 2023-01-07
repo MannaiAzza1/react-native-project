@@ -35,6 +35,7 @@ import {
 import InvitePlayer from "../components/player/invitePlayer";
 import Stat from "../components/stat/stat";
 import ProfilePlayer from "../components/player/playerProfile";
+import UpdatePlayer from "../components/player/updatePlayer";
 
 function CustomDrawerContent(props) {
   const navigation = useNavigation();
@@ -46,7 +47,7 @@ function CustomDrawerContent(props) {
   );
 }
 
-export default function HomePage() {
+export default function HomePagePLayer() {
   const Drawer = createDrawerNavigator();
 
   // 2. Use at the root of your app
@@ -55,32 +56,9 @@ export default function HomePage() {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Competences" component={Comp} />
-      <Drawer.Screen name="Statistiques" component={Stat} />
-      <Drawer.Screen name="Inviter joueur" component={InvitePlayer} />
-      <Drawer.Screen name="Challenge" component={Challenge} />
-      <Drawer.Screen name="Program" component={Program} />
-      <Drawer.Screen name="Event" component={Event} />
-      <Drawer.Screen name="Place" component={Place} />
-      <Drawer.Screen name="Session" component={Session} />
-      <Drawer.Screen
-        options={{
-          drawerItemStyle: { height: 0 },
-        }}
-        name="ChallengeAssign"
-        component={ChallengeAssign}
-        style={styles.hidden}
-        label
-      />
-      <Drawer.Screen
-        options={{
-          drawerItemStyle: { height: 0 },
-        }}
-        name="AddSession"
-        component={AddSession}
-        style={styles.hidden}
-        label
-      />
+       <Drawer.Screen name="Profile" component={ProfilePlayer} />
+       <Drawer.Screen headerShown={false} options={{headerMode: 'none', headerShown: false}} name="Update Profile" component={UpdatePlayer} />
+      
     </Drawer.Navigator>
   );
 }

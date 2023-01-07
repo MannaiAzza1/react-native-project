@@ -182,7 +182,7 @@ const handelDelete = (item) => {
   return (
   
     
-  <SafeAreaView backgroundColor="white">
+  <ScrollView backgroundColor="white">
     <Button
         title="Add new Statistiques"
         onPress={() => handleVisibleModal()}
@@ -281,7 +281,7 @@ const handelDelete = (item) => {
           );
         })}
       </ScrollView>
-      </SafeAreaView> 
+      </ScrollView> 
      
       
   );

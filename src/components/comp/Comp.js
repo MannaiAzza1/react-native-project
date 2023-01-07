@@ -154,7 +154,7 @@ const handelDelete = (item) => {
 
 
   return (
-    <SafeAreaView backgroundColor="white">
+    <ScrollView backgroundColor="white">
       <Button title="Add new competence" onPress={() => handleVisibleModal()} />
       <Separator />
       <Modal animationType="slide" visible={visible}>
@@ -238,7 +238,7 @@ onChange={value => setNbstars(value)} />
           );
         })}
       </ScrollView>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

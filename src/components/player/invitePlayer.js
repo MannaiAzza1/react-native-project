@@ -73,7 +73,7 @@ const fetchData = async () => {
     
     
     fetchData();
-}, []); 
+}, [comp]); 
 const handleSave = async() => {
    user = await AsyncStorage.getItem('userId')  
    var data = {
@@ -165,7 +165,7 @@ const handelDelete = (item) => {
   return (
   
     
-  <SafeAreaView backgroundColor="white">
+  <ScrollView backgroundColor="white">
     <Button
         title="Invite a player"
         onPress={() => handleVisibleModal()}
@@ -232,14 +232,15 @@ const handelDelete = (item) => {
             title= {item.username}
             
             
-            right={props=><Text><Button title="Edit" onPress={() => navigation.navigate("UpdatePlayer",{data: item._id,})}>
+            right={props=><Text><Button title="Edit" onPress={() => navigation.navigate("Update Profile",{data: item._id,})}>
               
           </Button>  </Text>}
           />
           );
         })}
       </ScrollView>
-      </SafeAreaView> 
+     </ScrollView> 
+     
      
       
   );

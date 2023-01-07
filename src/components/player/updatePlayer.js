@@ -35,7 +35,6 @@ const UpdatePlayer = ({route}) => {
   const [comp, setComp] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const[ visible,setVisible] = useState(false)
-  const [currentId,setCurrentId]=useState(null)
   const [open, setOpen] = useState(false)
   const [role, setRole] = useState();
   const [selectedStats, setSelectedStats] = useState([]);
@@ -62,7 +61,7 @@ const UpdatePlayer = ({route}) => {
     [
       {
         text: "Continue to App",
-        onPress: () => console.log("Cancel Pressed"),
+        onPress: () => navigation.navigate("Profile"),
         style: "cancel"
       }
     ]
@@ -92,9 +91,11 @@ const [password, setPassword] = useState();
 const [firstname, setFirstname] = useState();
 const [lastname, setLastname] = useState();
 const [sexe, setSexe] = useState();
+const [etbs, setEtbs] = useState();
 const [date, setDate] = useState(new Date())
 const [poids, setPoids] = useState();
 const [stats,setStats]=useState([]);
+const [tel,setTel]=useState();
 const { data } = route.params;
 const id =data
 
@@ -137,7 +138,8 @@ const handleSave = async() => {
     sexe:sexe,
     competences:selectedItems,
     stats:selectedStats,
-   
+    tel:tel,
+    etablissement:etbs,
     };
    
     console.log(data)
@@ -177,6 +179,10 @@ const onChangeEmail = (value) => {
   setEmail(value);
   console.log(value)
 }
+const onChangeTel = (value) => {
+  setTel(value);
+  console.log(value)
+}
 const handleEdit = (item) =>
 {
   setUsername(item.username)
@@ -187,6 +193,7 @@ const handleEdit = (item) =>
   setSexe(item.sexe)
   setSelectedItems(item.competences)
   setSelectedStats(item.stats)
+  setTel(item.tel)
 
 }
 
@@ -198,13 +205,12 @@ const handleEdit = (item) =>
 
 
   return (
-    <><Appbar.Header>
-      <Appbar.Content title="Inscription"  />
+    <>
+    <Appbar.Header>
+      <Appbar.Content title=""  />
     </Appbar.Header>
-    <SafeAreaView backgroundColor="white">
-        <ScrollView>
-
-
+   
+        <ScrollView backgroundColor="white">
 
 
 
@@ -235,6 +241,12 @@ const handleEdit = (item) =>
             style={styles.text_input}
             placeholder="Username"
             onChangeText={onChangeUsername} />
+            <Text style={styles.label}>Telephone : </Text>
+              <TextInput
+            value={tel}
+            style={styles.text_input}
+            placeholder="Telephone"
+            onChangeText={onChangeTel} />
           
           {role=="player" && ( 
           <><Text style={styles.label}>Password : </Text><TextInput
@@ -244,6 +256,17 @@ const handleEdit = (item) =>
               placeholder="Password"
               onChangeText={onChangePassword} /></>
           )}
+           <Picker
+            style={styles.text_input}
+            placeholder={etbs}
+            selectedValue={etbs}
+            onValueChange={(itemValue, itemIndex) => {
+              setEtbs(itemValue);
+              console.log(itemValue);
+            } }>
+            <Picker.Item label="Public" value="public" />
+            <Picker.Item label="Privée" value="prive" />
+          </Picker>
             <Text style={styles.label}>Sexe : </Text>
           <Picker
             style={styles.text_input}
@@ -328,17 +351,21 @@ onChange={value => setPoids(value)} />
             <Button
               title="Update"
               onPress={() => handleSave()} />
+          </TouchableOpacity> 
+          {role=="Coach" && (
+          <TouchableOpacity style={styles.btnSave}>
+            <Button
+              title="Cancel"
+              onPress={() => navigation.navigate("Inviter joueur")} />
           </TouchableOpacity>
-          <Text style={styles.label}>Birthdate : </Text>
-          <Text style={styles.label}>Birthdate : </Text>
-          <Text style={styles.label}>Birthdate : </Text>
+          )}
           
           
 
 
         </ScrollView>
 
-      </SafeAreaView></> 
+      </> 
       
 
      

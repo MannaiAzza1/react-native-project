@@ -16,6 +16,7 @@ import React from "react";
 import Comp from "./src/components/comp/Comp";
 import VerifyCode from "./src/screens/PlayerVerify";
 import UpdatePlayer from "./src/components/player/updatePlayer";
+import HomePagePLayer from "./src/screens/HomePagePlayer";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="HomePagePlayer" component={HomePagePLayer} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Confirm" component={VerifyCode} />
         <Stack.Screen name="UpdatePlayer" component={UpdatePlayer} options={{

@@ -38,10 +38,14 @@ function Login() {
         if(res.role.toLowerCase()=="coach")
         {navigation.navigate("HomePage");}
         else
-         if((res.role.toLowerCase()=="player"))
+         if((res.role.toLowerCase()=="player")&&(res.status.toLowerCase()=="invited"))
         {
           AsyncStorage.setItem('code',res.confirmationCode)
           navigation.navigate("Confirm")
+        }
+        else
+        {
+          navigation.navigate("HomePagePlayer")
         }
         
       })
