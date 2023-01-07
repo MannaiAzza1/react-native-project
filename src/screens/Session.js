@@ -33,7 +33,9 @@ export default function Session() {
   const [canceledReason, setCanceledReason] = useState("");
   const [feedback, setFeedback] = useState("");
   const [obj, setObj] = useState(false);
+
   const [hideId, setHideId] = useState(null);
+  const[VisibleView,setVisibleView]=useState(false)
   var radio_props = [
     { label: "yes", value: true },
     { label: "no", value: false },
@@ -114,6 +116,17 @@ export default function Session() {
     setPlayer(item.player);
     setStatus(item.status);
   };
+  const handleView = (item) => {
+    setVisibleView(true);
+    setHideId(item._id);
+    setSessionName(item.name);
+    setDate(item.date);
+    setPlace(item.place);
+    
+    setStatus(item.status);
+    setCanceledReason(item.canceled_reason)
+   
+  };
 
   const onChangeName = (value) => {
     setSessionName(value);
@@ -180,6 +193,34 @@ export default function Session() {
           </View>
         </SafeAreaView>
       </Modal>
+      <Modal animationType="slide" visible={VisibleView}>
+        <SafeAreaView>
+          <View>
+            <TouchableOpacity onPress={() => setVisibleView(false)}>
+              <Text style={styles.txtClose}>close</Text>
+            </TouchableOpacity>
+            
+      <ScrollView backgroundColor="white">
+        <Text style={styles.label}>Id : {hideId}</Text>
+        <Text style={styles.label}>Status: {status}</Text>
+        <Text style={styles.label}>Canceled Reason: {canceledReason}</Text>
+        <Text style={styles.label}>Name: {name}</Text>
+        <Text style={styles.label}>Date: {date}</Text>
+        
+       
+
+        
+
+           
+
+       
+      </ScrollView>
+
+            
+          </View>
+        </SafeAreaView>
+      </Modal>
+
       <Modal animationType="slide" visible={feedbackModal}>
         <SafeAreaView>
           <View style={styles.centered}>
@@ -233,8 +274,8 @@ export default function Session() {
                 <TouchableOpacity onPress={() => handelDelete(item)}>
                   <Text style={styles.txt_del}>Delete</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handelUpdate(item)}>
-                  <Text style={styles.txt_edit}>Edit</Text>
+                <TouchableOpacity onPress={() => handleView(item)}>
+                  <Text style={styles.txt_edit}>View</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handelCanceled(item)}>
                   <Text style={styles.txt_edit}>cancel</Text>
@@ -242,6 +283,7 @@ export default function Session() {
                 <TouchableOpacity onPress={() => handelFeedback(item)}>
                   <Text style={styles.txt_edit}>feedback</Text>
                 </TouchableOpacity>
+                
               </View>
             </View>
           );
@@ -342,5 +384,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: 50,
+    marginRight: 50,
+    
+    
   },
 });
