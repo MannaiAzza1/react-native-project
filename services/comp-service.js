@@ -9,15 +9,15 @@ const get = (id) => {
 };
 export const FetchCompetences = async () => {
   // await delay(500)
-  const result = await Axios.get("http://192.168.1.5:8080/api/comp/")
-  return result.data
-}
+  const result = await Axios.get("http://192.168.1.7:8080/api/comp/");
+  return result.data;
+};
 export const FetchVisibleCompetences = async () => {
   // await delay(500)
-  const result = await Axios.get("http://192.168.1.5:8080/api/comp/visible")
-  return result.data
-}
-const create = data => {
+  const result = await Axios.get("http://192.168.1.7:8080/api/comp/visible");
+  return result.data;
+};
+const create = (data) => {
   return http.post("/comp/create", data);
 };
 const update = (id, data) => {
@@ -30,13 +30,16 @@ const removeAll = () => {
   return http.delete(`/comp`);
 };
 const FindVisible = () => {
-    return http.get(`/comp/visible` );
-  };
-  export const CreateCompetences = async (data) => {
-    // await delay(500)
-    const result = await Axios.post("http://192.168.1.5:8080/api/comp/create",data)
-    return result.data
-  }
+  return http.get(`/comp/visible`);
+};
+export const CreateCompetences = async (data) => {
+  // await delay(500)
+  const result = await Axios.post(
+    "http://192.168.1.7:8080/api/comp/create",
+    data
+  );
+  return result.data;
+};
 
 const CompetenceService = {
   getAll,

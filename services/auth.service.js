@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { cloneElement, useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const API_URL = "http://192.168.1.5:8080/api/auth/";
+const API_URL = "http://192.168.1.7:8080/api/auth/";
 const register = (data) => {
-  return axios.post("http://192.168.1.5:8080/api/auth/signup/coach", data);
+  return axios.post("http://192.168.1.7:8080/api/auth/signup/coach", data);
 };
 const invite = (id, username, email, password, firstname, lastname) => {
   return axios.post(API_URL + id + "/invite", {
@@ -16,10 +16,10 @@ const invite = (id, username, email, password, firstname, lastname) => {
   });
 };
 const getinvites = (id, data) => {
-  return axios.get(`http://192.168.1.5/api/player/coach/` + id, data);
+  return axios.get(`http://192.168.1.7/api/player/coach/` + id, data);
 };
 const acceptInvite = (id, data) => {
-  return axios.put(`http://192.168.1.5/api/auth/confirm/${id}`, data);
+  return axios.put(`http://192.168.1.7/api/auth/confirm/${id}`, data);
 };
 
 const storeData = async (value) => {

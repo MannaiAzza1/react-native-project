@@ -41,12 +41,12 @@ export default function Session() {
   useEffect(() => {
     getList();
   }, []);
+
   const getList = () => {
     SessionService.getAll().then((res) => {
       var response = res.data;
       setList(response?.data);
     });
-    console.log(list);
   };
   const handelVisibleModal = () => {
     setVisible(!visible);
@@ -225,8 +225,8 @@ export default function Session() {
                 </Text>
                 <Text style={styles.txt_item}>{item?.name}</Text>
                 <Text style={styles.txt_item}>{item?.date}</Text>
-                {/* <Text style={styles.txt_item}>{item?.place.name}</Text> */}
-                {/* <Text style={styles.txt_item}>{item?.player}</Text> */}
+                {/* <Text style={styles.txt_item}>{item?.place.name}</Text> 
+                <Text style={styles.txt_item}>{item?.player}</Text>*/}
                 <Text style={styles.txt_item}>{item?.status}</Text>
               </View>
               <View>

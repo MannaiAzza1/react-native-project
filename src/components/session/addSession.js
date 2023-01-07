@@ -10,8 +10,8 @@ import {
   Modal,
   Platform,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from "@react-native-picker/picker";
+import MultiSelect from "react-native-multiple-select";
 
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -25,6 +25,8 @@ import React, { cloneElement, useEffect, useState } from "react";
 import { margin } from "styled-system";
 import SessionService from "../../../services/session.service";
 import PlaceService from "../../../services/place.service";
+import StatService from "../../../services/stat-service";
+import CompetenceService from "../../../services/comp-service";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "react-native-paper";
 import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
@@ -45,6 +47,19 @@ export default function AddSession({ route, navigation }) {
   const [programSelected, setProgramSelected] = useState(null);
   const [session, setSession] = useState(null);
   const [invitedUsers, setInvitedUsers] = useState([]);
+  const [comp, setComp] = useState([]);
+  const [selectedComp, setSelectedComp] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [stats, setStats] = useState([]);
+  const [selectedStats, setSelectedStats] = useState([]);
+
+  const onSelectedStatsChange = (selectedStats) => {
+    setSelectedStats(selectedStats);
+  };
+
+  const onSelectedCompsChange = (s) => {
+    setSelectedComp(s);
+  };
 
   useEffect(() => {
     PlaceService.getAll().then((response) => {
@@ -58,16 +73,32 @@ export default function AddSession({ route, navigation }) {
     });
   }, []);
 
-  const fetchData = async () => {
-    user = await AsyncStorage.getItem("userId");
-    const players = await AuthService.getinvites(user);
-    if (players) {
-      console.log(players.data);
-      setPlayer(players.data);
-    }
-  };
+  useEffect(async () => {
+    const statistiques = await StatService.getAll();
+    setStats(statistiques);
+  }, []);
+
+  useEffect(async () => {
+    const competences = await CompetenceService.FetchCompetences();
+    setComp(competences);
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    console.log(competences);
+  }, []);
+
   useEffect(() => {
-    fetchData();
+    AuthService.getData().then((r) => {
+      let u = JSON.parse(r);
+      u.invited_users.forEach((element) => {
+        invitedUsers.push(element);
+      });
+      if (invitedUsers) {
+        invitedUsers.forEach((e) => {
+          PlayerService.fetchPlayer(e).then((res) => {
+            player.push({ id: res._id, name: res.username });
+          });
+        });
+      }
+    });
   }, []);
 
   function showDatePicker() {
@@ -81,13 +112,26 @@ export default function AddSession({ route, navigation }) {
 
   const handelSave = async () => {
     user = await AsyncStorage.getItem("userId");
+
+    let stats = Object.entries(selectedStats);
+    console.log(stats);
+    // let stat = [];
+    // stats.map((statistique) => {
+    //   let statVal = {
+    //     stat: statistique[0],
+    //     value: statistique[1],
+    //   };
+    //   stat.push(statVal);
+    //   setStatis(stat);
+    // });
+
     var data = {
       name: name,
       place: placeSelected,
-      program: programSelected,
+      program: selectedItems,
       player: playerSelected,
       date: date,
-      compToImprove: [],
+      compToImprove: selectedComp,
       statsToAchieve: [],
       feedback: "",
       obj_Is_Achieved: false,
@@ -153,9 +197,9 @@ export default function AddSession({ route, navigation }) {
         <Picker
           style={styles.text_input}
           placeholder={program}
-          selectedValue={programSelected}
+          selectedValue={selectedItems}
           onValueChange={(itemValue, itemIndex) => {
-            setProgramSelected(itemValue);
+            setSelectedItems(itemValue);
           }}
         >
           {program.map((item, index) => (
@@ -175,6 +219,45 @@ export default function AddSession({ route, navigation }) {
             <Picker.Item value={item.id} label={item.name} key={index} />
           ))}
         </Picker>
+        <Text style={styles.label}>competence : </Text>
+        <MultiSelect
+          hideTags
+          items={comp}
+          uniqueKey="_id"
+          onSelectedItemsChange={onSelectedCompsChange}
+          selectedItems={selectedComp}
+          selectText="Select Items"
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="title"
+          submitButtonColor="#00BFA5"
+          submitButtonText="Submit"
+          styleDropdownMenu={styles.select}
+        />
+
+        <Text style={styles.label}>stat : </Text>
+        <MultiSelect
+          hideTags
+          items={stats}
+          uniqueKey="_id"
+          onSelectedItemsChange={onSelectedStatsChange}
+          selectedItems={selectedStats}
+          selectText="Select Items"
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="title"
+          submitButtonColor="#00BFA5"
+          submitButtonText="Submit"
+          styleDropdownMenu={styles.select}
+        />
 
         <TouchableOpacity style={styles.btnSave} onPress={handelSave}>
           <Text style={styles.txtSave}>save</Text>

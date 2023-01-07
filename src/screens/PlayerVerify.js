@@ -1,120 +1,88 @@
-
 import { useState, useEffect } from "react";
 
-import {DrawerLayoutAndroid,TouchableOpacity ,ScrollView,Text, SafeAreaView,Alert,StyleSheet, View ,TextInput,Modal,Button} from "react-native";
+import {
+  DrawerLayoutAndroid,
+  TouchableOpacity,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  Alert,
+  StyleSheet,
+  View,
+  TextInput,
+  Modal,
+  Button,
+} from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AuthService from "../../services/auth-service";
 import { system } from "styled-system";
 
-
-const Separator = () => (
-  <View style={styles.separator} />
-);
+const Separator = () => <View style={styles.separator} />;
 const createTwoButtonAlert = () =>
-  Alert.alert(
-    "This code is False",
-    "Try again",
-    [
-      {
-        text: "Try again",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel"
-      }
-    ]
-  );
+  Alert.alert("This code is False", "Try again", [
+    {
+      text: "Try again",
+      onPress: () => console.log("Cancel Pressed"),
+      style: "cancel",
+    },
+  ]);
 
 const VerifyCode = () => {
   const navigation = useNavigation();
   const [title, setTitle] = useState();
 
-
-
-
-
-const handleSave = async() => {
-    const id = await AsyncStorage.getItem('userId')
-    const code = await AsyncStorage.getItem('code')
-    if(title.toLowerCase()==code.toLowerCase())
-    {
-      var data={
-        status:"Accepted"
+  const handleSave = async () => {
+    const id = await AsyncStorage.getItem("userId");
+    const code = await AsyncStorage.getItem("code");
+    if (title.toLowerCase() == code.toLowerCase()) {
+      var data = {
+        status: "Accepted",
       };
-      const result = await axios.put(`http://192.168.1.5:8080/api/player/${id}/update`,data)
-      navigation.navigate("UpdatePlayer",{data: id,});
+      const result = await axios.put(
+        `http://192.168.1.7:8080/api/player/${id}/update`,
+        data
+      );
+      navigation.navigate("UpdatePlayer", { data: id });
+    } else {
+      createTwoButtonAlert();
     }
-    else
-    {
-      createTwoButtonAlert()
-    }
-    
-  
-    
-  
- 
+  };
 
-
-    
-  
-    
-   
-  
-  
-  
-};
-
-
-const onChangeTitle = (value) => {
-  setTitle(value);
-  console.log(value)
-};
-
-
-
-
-
-
-
+  const onChangeTitle = (value) => {
+    setTitle(value);
+    console.log(value);
+  };
 
   return (
-  
- <SafeAreaView backgroundColor="white">
- <ScrollView backgroundColor="white">
-  <Modal animationType="slide">
-        <SafeAreaView>
-          <View>
-         <Separator/>
-         <Text>Welcome to SportTech</Text>
-            <Text>Please Enter the confirmation code sent to your email </Text>
-            <TextInput
-              value={title}
-              style={styles.text_input}
-              placeholder="Code"
-              onChangeText={onChangeTitle}
-            
-            />
-            
-            <TouchableOpacity style={styles.btnSave} >
-            <Button
-        title={"Confirm"}
-        onPress={() => handleSave()}
-      />
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </Modal>
-                     
+    <SafeAreaView backgroundColor="white">
+      <ScrollView backgroundColor="white">
+        <Modal animationType="slide">
+          <SafeAreaView>
+            <View>
+              <Separator />
+              <Text>Welcome to SportTech</Text>
+              <Text>
+                Please Enter the confirmation code sent to your email{" "}
+              </Text>
+              <TextInput
+                value={title}
+                style={styles.text_input}
+                placeholder="Code"
+                onChangeText={onChangeTitle}
+              />
 
-  
-      
+              <TouchableOpacity style={styles.btnSave}>
+                <Button title={"Confirm"} onPress={() => handleSave()} />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </Modal>
       </ScrollView>
-     </SafeAreaView> 
-     
-      
+    </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -135,10 +103,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginVertical: 20,
-    marginRight:10,
+    marginRight: 10,
     textAlign: "right",
-    color:"blue"
-    
+    color: "blue",
   },
   text_input: {
     padding: 10,
@@ -148,8 +115,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 50,
     marginRight: 50,
-    
-    
   },
   desc_input: {
     padding: 20,
@@ -159,8 +124,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 50,
     marginRight: 50,
-    
-    
   },
   card_input: {
     padding: 23,
@@ -170,8 +133,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 20,
     marginRight: 10,
-    
-    
   },
   header_container: {
     padding: 10,
@@ -235,7 +196,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginVertical: 8,
-    borderBottomColor: '#737373',
+    borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
